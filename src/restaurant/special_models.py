@@ -4,6 +4,7 @@ from django.db import models
 # sql "create table restaurant (name text, ...")
 
 class Restaurant(models.Model):
+    
     name = models.CharField(max_length=100)
     address = models.TextField(null=True, blank=True)
     order_count = models.IntegerField(default=0)
@@ -13,10 +14,6 @@ class Restaurant(models.Model):
     open_close = models.BooleanField(null=True, blank=True)
     # open_close = models.NullBooleanField()
     
-    class Meta:
-        ordering = ["updated_at"]
-        verbose_name = "رستوران"
-        verbose_name_plural = "رستوران ها"
 
     def __str__(self):
         return f"{self.name} -- {str(self.id)} "

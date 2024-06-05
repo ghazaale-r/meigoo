@@ -29,6 +29,11 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+builtin_apps = []
+third_party_apps = []
+custom_apps = []
+
+
 
 INSTALLED_APPS = [
     # built-in apps
@@ -83,7 +88,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    # 'dwh': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
 }
 
 
