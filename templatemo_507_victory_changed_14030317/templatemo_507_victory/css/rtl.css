@@ -1,0 +1,17 @@
+body {
+    direction: rtl;
+    text-align: right;
+}
+
+.navbar {
+    float: right;
+}
+
+.navbar-nav {
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.footer {
+    text-align: right;
+}
