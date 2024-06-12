@@ -43,7 +43,7 @@ class Category(models.Model):
     image_11 = models.ImageField(upload_to='categories_images/', blank=True, null=True)
     image_22 = models.ImageField(upload_to ='cats_img/%Y/%m/%d/', default='default.jpg') 
     image_33 = models.ImageField(upload_to =restaurant_image_upload_to, blank=True, null=True)
-
+    # restaurants = این رو برو وصل کن به رستوران ها
     def __str__(self):
         return self.name
     
