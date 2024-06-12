@@ -1,0 +1,60 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+
+{% block content %}
+    
+    {% include "restaurant/categories_section.html" with cats=categories %}
+
+    <section class="featured-food" style="padding: 0px;">
+        <div class="container">
+            <!-- <div class="row">
+                <div class="heading">
+                    <h2>--- New Resturants :) --- </h2>
+                </div>
+            </div> -->
+            <div class="row">
+                {% for rest in selected_category.restaurants.all %}
+                <div class="col-md-3">
+                    <div class="food-item">
+                        <h2>{{rest.name}}</h2>
+
+                        {% if rest.image %}
+
+                        <img src="{{rest.image.url}}" alt="{{rest.image.url}}">
+
+                        {% else %}
+
+                        <img src="{% static "default.jpg" %}" alt="">
+                        
+                        {% endif %}
+
+                        {% comment %} <img src="img/breakfast_item.jpg" alt=""> {% endcomment %}
+                        <div class="star-rate"> <span style="color: gray;">({{ rest.rating_count }}) </span> &nbsp;  {{rest.sum_rating}} &nbsp;
+                            <span class="sc-fubCfw dHxJBl">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="#FFCE00">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 9.62097L2.42572 11.5L3.10832 7.52016L0.216797 4.70163L4.21278 4.12098L5.99984 0.5L7.7869 4.12098L11.7829 4.70163L8.89136 7.52016L9.57395 11.5L5.99984 9.62097Z"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="text-content">
+                            <h4>resturant categories </h4>
+                            <p>
+                                {% for cat in rest.categories.all %}
+                                {{cat.name}} ,
+                                {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                
+
+               
+               
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

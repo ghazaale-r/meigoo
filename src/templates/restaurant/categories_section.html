@@ -4,38 +4,28 @@
 <section class="services">
     <div class="container">
         <div class="row">
+            
+            {% for cat in cats %}
             <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="service-item">
-                    <a href="menu.html">
-                    <img src="{% static 'img/cook_breakfast.png' %}" alt="Breakfast">
-                    <h4>Breakfast</h4>
+                    <a href="{% url 'category-restaurant' cat.id  %}">
+
+                    {% if cat.image_33 %}
+                    <img src="{{ cat.image_33.url }}" alt="{{ cat.image_33.url }}">
+                    {% else %}
+                    <img src="{% static "default.jpg" %}" alt="{{ cat.image_33 }}">
+                    {% endif %}
+                    <h4>{{cat.name}}</h4>
                     </a>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="service-item">
-                    <a href="menu.html">
-                    <img src="img/cook_lunch.png" alt="Lunch">
-                    <h4>Lunch</h4>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="service-item">
-                    <a href="menu.html">
-                    <img src="img/cook_dinner.png" alt="Dinner">
-                    <h4>Dinner</h4>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="service-item">
-                    <a href="menu.html">
-                    <img src="img/cook_dessert.png" alt="Desserts">
-                    <h4>Desserts</h4>
-                    </a>
-                </div>
-            </div>
+            
+            {% endfor %}
+            
+        </div>
+        <div class="row">
+            <h2>{{selected_category.name}}</h2>
+            <hr>
         </div>
     </div>
 </section>

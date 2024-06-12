@@ -11,7 +11,7 @@
 {% endblock header-navbar %} {% endcomment %}
 
 
-
+{{ categoriiis }}
 
 {% block content %}
 
@@ -22,7 +22,7 @@
 
 
 
-{% include "restaurant/categories_section.html" %}
+{% include "restaurant/categories_section.html" with cats=categoriiis %}
 
 
 
@@ -36,10 +36,13 @@
             </div>
         </div>
         <div class="row">
+            {% for cat in categoriiis %}
+            
             <div class="col-md-4">
                 <div class="food-item">
-                    <h2>resturant name </h2>
-                    <img src="img/breakfast_item.jpg" alt="">
+                    <h2>{{ cat.name }} </h2>
+                    {% comment %} <img src="{{ cat.image_11.url }}" alt="{{ cat.image_11 }}"> {% endcomment %}
+                    <img src="{{ cat.image_22.url }}"  alt="{{ cat.image_22 }}">
                     <div class="price-after-discount">4.50 T</div>
                     <div class="price-down-left" style="text-decoration: line-through;">4.50000 T</div>
                     <div class="text-content">
@@ -48,6 +51,8 @@
                     </div>
                 </div>
             </div>
+            
+            {% endfor %}
             <div class="col-md-4">
                 <div class="food-item">
                     <h2>Lunch</h2>
