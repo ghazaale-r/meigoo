@@ -1,7 +1,10 @@
 from django.contrib import admin
 from restaurant.models import (Restaurant, 
                                Address,
-                               Category)
+                               Category,
+                               Food,
+                               Menu,
+                               Rating)
 
 from django.utils.html import format_html
 from django.urls import reverse
@@ -10,6 +13,9 @@ from django.urls import reverse
 
 admin.site.register(Address)
 admin.site.register(Category)
+admin.site.register(Food)
+admin.site.register(Menu)
+admin.site.register(Rating)
 
 
 
