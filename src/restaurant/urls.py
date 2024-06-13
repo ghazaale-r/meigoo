@@ -1,9 +1,17 @@
 from django.urls import path
-from .views import restaurant_page_with_category
+from .views import *
+
+app_name = 'restaurants'
 
 urlpatterns = [
 
     # /category/1/restaurants
     # /category/1
-    path('category/<int:category_id>/',  restaurant_page_with_category, name='category-restaurant'),
+    path('',  home_page_view, name='home-page'),
+    
+    path('category/',  category_restaurants_by_id, name='category-restaurants'),
+    path('category/<int:category_id>/',  category_restaurants_by_id, name='category-id-restaurants'),
+    
+    path('category/all/',  category_restaurants_by_name, name='category-restaurants-all'),
+    path('category/<str:category_name>/restaurants/',  category_restaurants_by_name, name='category-name-restaurants'),
 ]
