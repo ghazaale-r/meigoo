@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import ( MinLengthValidator, MaxLengthValidator,
@@ -34,16 +33,18 @@ class Address(models.Model):
         
         
 class Category(models.Model):
-    def restaurant_image_upload_to(instance, filename):
-        # filename = 'skdfhkj.jpg'
-        filename = f'{instance.id}-{filename}' if instance.id else filename
-        return f'cats_im/{datetime.now().strftime("%Y-%m/")}/{filename}'
-    
     name = models.CharField(max_length=100)
-    image_11 = models.ImageField(upload_to='categories_images/', blank=True, null=True)
-    image_22 = models.ImageField(upload_to ='cats_img/%Y/%m/%d/', default='default.jpg') 
-    image_33 = models.ImageField(upload_to =restaurant_image_upload_to, blank=True, null=True)
+    image = models.ImageField(upload_to='categories_images/', blank=True, null=True, default='cat-default.jpg')
+    
+    # def restaurant_image_upload_to(instance, filename):
+    #     # filename = 'skdfhkj.jpg'
+    #     filename = f'{instance.id}-{filename}' if instance.id else filename
+    #     return f'cats_im/{datetime.now().strftime("%Y-%m/")}/{filename}'
+    # image_22 = models.ImageField(upload_to ='cats_img/%Y/%m/%d/', default='default.jpg') 
+    # image_33 = models.ImageField(upload_to =restaurant_image_upload_to, blank=True, null=True)
     # restaurants = این رو برو وصل کن به رستوران ها
+
+    
     def __str__(self):
         return self.name
     
@@ -58,7 +59,7 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=100)
     address = models.OneToOneField(Address, on_delete=models.PROTECT)
     
-    image = models.ImageField(upload_to ='restaurants_imgs/%Y/%m/', default='default.jpg') 
+    image = models.ImageField(upload_to ='restaurants_imgs/%Y/%m/', default='restrnt-default.jpg') 
      
     order_count = models.IntegerField(default=0)
     count_view = models.IntegerField(default=0)
@@ -69,7 +70,7 @@ class Restaurant(models.Model):
     open_close = models.BooleanField(null=True, blank=True)
     # open_close = models.NullBooleanField()
     
-    restaurant_parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.DO_NOTHING)
+    restaurant_parent = models.ForeignKey("self", null=True, blank=True, on_delete=models.DO_NOTHING, related_name='branches')
     categories = models.ManyToManyField(Category, related_name='restaurants')
     # rating ...
     rating_count = models.IntegerField(default=0)
@@ -193,11 +194,17 @@ def update_restaurant_rating_on_delete(sender, instance, **kwargs):
 
 class Food(models.Model):
     name = models.CharField(max_length=100)
-    # image = models.ImageField(upload_to="")
+    image = models.ImageField(upload_to="foods/", default='food-default.jpg')
     description = models.TextField()
 
 
 class Menu(models.Model):
+    
+    def restaurant_image_upload_to(instance, filename):
+        path = f'restaurants_imgs/{instance.restaurant.id}_{instance.restaurant.name}/{instance.meal}/'
+        return f'{path}/{filename}'
+    
+    
     MEAL_CHOICES = [
         ("breakfast", "صبحانه"),
         ("common", "وعده غذایی اصلی"),
@@ -207,21 +214,34 @@ class Menu(models.Model):
         # ("lunch", "ناهار")
         # ("dinner", "شام")
     ]
-    meal = models.CharField(max_length=50, choices=MEAL_CHOICES)
+    name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to="foods/", default='food-default.jpg')
+    meal = models.CharField(max_length=50, choices=MEAL_CHOICES, default='others')
     food = models.ForeignKey("Food", on_delete=models.SET_NULL, null=True, blank=True)
     price = models.DecimalField(max_digits=4, decimal_places=3)
-    discount = models.IntegerField(default=0)  # TODO: ولیدیشن ماکسیمم صد بودن تخفیف
+    discount_percent = models.IntegerField(default=0, validators=[
+                                            MinValueValidator(0), 
+                                            MaxValueValidator(100)
+                                        ])  # TODO: ولیدیشن ماکسیمم صد بودن تخفیف
     size = models.CharField(max_length=50)
     restaurant = models.ForeignKey("Restaurant", on_delete=models.CASCADE, null=True)
     description = models.TextField()
-    # image = models.ImageField("")
-
 
 
     def calc_price_after_discount(self):
         # return self.price - (self.discount * self.price)
-        return self.price * (100 - self.discount)   # 500 * 90%
+        return self.price * (100 - self.discount_percent)   # 500 * 90%
 
+
+    def get_food_name(self):
+        return self.name if self.name else self.food.name
+
+    def get_food_image(self):
+        return self.image if self.image else self.food.image
+
+    def get_food_desc(self):
+        return self.description if self.description else self.food.description
+    
 
 class MenuTitle(models.Model):
     pass
