@@ -15,18 +15,16 @@
 
 {% block content %}
 
+<div style="padding-top: 50px">
 
-<section class="cook-delecious">
-       
-</section>
-
+</div>
 
 
-{% include "restaurant/categories_section.html" with cats=categoriiis %}
+{% include "restaurant/categories_section.html" with cats=categories %}
 
 
 
-{% if food_part_available %}
+{% if foos_party_flag %}
 
 <section class="featured-food food-party">
     <div class="container">
@@ -36,13 +34,11 @@
             </div>
         </div>
         <div class="row">
-            {% for cat in categoriiis %}
             
             <div class="col-md-4">
                 <div class="food-item">
-                    <h2>{{ cat.name }} </h2>
-                    {% comment %} <img src="{{ cat.image_11.url }}" alt="{{ cat.image_11 }}"> {% endcomment %}
-                    <img src="{{ cat.image_22.url }}"  alt="{{ cat.image_22 }}">
+                    <h2>food name</h2>
+                    <img src="img/dinner_item.jpg" alt="">
                     <div class="price-after-discount">4.50 T</div>
                     <div class="price-down-left" style="text-decoration: line-through;">4.50000 T</div>
                     <div class="text-content">
@@ -52,7 +48,6 @@
                 </div>
             </div>
             
-            {% endfor %}
             <div class="col-md-4">
                 <div class="food-item">
                     <h2>Lunch</h2>
@@ -94,6 +89,60 @@
             </div>
         </div>
         <div class="row">
+            {% for restrnt in recent_restaurants %}
+            <div class="col-md-3">
+                <div class="food-item">
+                    <h2 style="font-size: 20px">{{ restrnt.name }}</h2>
+                    <img src="{{restrnt.image.url}}" alt="" >
+                    <div class="star-rate"> 
+                        {% if restrnt.rating_count > 0 %}
+                        <span style="color: gray;">({{restrnt.rating_count}}) </span> &nbsp;  {{restrnt.average_rating}} &nbsp;
+                        
+                        <span class="sc-fubCfw dHxJBl">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="#FFCE00">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 9.62097L2.42572 11.5L3.10832 7.52016L0.216797 4.70163L4.21278 4.12098L5.99984 0.5L7.7869 4.12098L11.7829 4.70163L8.89136 7.52016L9.57395 11.5L5.99984 9.62097Z"></path>
+                            </svg>
+                        </span>
+                        {% else %}
+                        <span style="color: gray;"> بدون امتیاز  </span>&nbsp; 
+                        
+                        <span class="sc-fubCfw dHxJBl">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="gray">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 9.62097L2.42572 11.5L3.10832 7.52016L0.216797 4.70163L4.21278 4.12098L5.99984 0.5L7.7869 4.12098L11.7829 4.70163L8.89136 7.52016L9.57395 11.5L5.99984 9.62097Z"></path>
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="text-content">
+                        {% comment %} <h4>resturant categories </h4> {% endcomment %}
+                        <p>{{ restrnt.categories.all|join:", " }}</p>
+                        {% comment %} 
+                        {% for category in restrnt.categories %}
+                            {{ category }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        {% endcomment %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% comment %} <div class="col-md-4">
+                <div class="food-item">
+                    <h2>resturant name </h2>
+                    <img src="img/breakfast_item.jpg" alt="">
+                    <div class="star-rate"> <span style="color: gray;">(126) </span> &nbsp;  4.5 &nbsp;
+                        <span class="sc-fubCfw dHxJBl">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="#FFCE00">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 9.62097L2.42572 11.5L3.10832 7.52016L0.216797 4.70163L4.21278 4.12098L5.99984 0.5L7.7869 4.12098L11.7829 4.70163L8.89136 7.52016L9.57395 11.5L5.99984 9.62097Z"></path>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="text-content">
+                        <h4>resturant categories </h4>
+                        <p>Dreamcatcher squid ennui cliche chicharros nes echo  small batch jean shorts hexagon street art knausgaard wolf...</p>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="food-item">
                     <h2>resturant name </h2>
@@ -113,100 +162,26 @@
             </div>
             <div class="col-md-4">
                 <div class="food-item">
-                    <h2>Lunch</h2>
-                    <img src="img/lunch_item.jpg" alt="">
-                    <div class="price">$7.50</div>
+                    <h2>resturant name </h2>
+                    <img src="img/breakfast_item.jpg" alt="">
+                    <div class="star-rate"> <span style="color: gray;">(126) </span> &nbsp;  4.5 &nbsp;
+                        <span class="sc-fubCfw dHxJBl">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="#FFCE00">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 9.62097L2.42572 11.5L3.10832 7.52016L0.216797 4.70163L4.21278 4.12098L5.99984 0.5L7.7869 4.12098L11.7829 4.70163L8.89136 7.52016L9.57395 11.5L5.99984 9.62097Z"></path>
+                            </svg>
+                        </span>
+                    </div>
                     <div class="text-content">
-                        <h4>Taiyaki Gastro Tousled</h4>
+                        <h4>resturant categories </h4>
                         <p>Dreamcatcher squid ennui cliche chicharros nes echo  small batch jean shorts hexagon street art knausgaard wolf...</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="food-item">
-                    <h2>Dinner</h2>
-                    <img src="img/dinner_item.jpg" alt="">
-                    <div class="price">$12.50</div>
-                    <div class="text-content">
-                        <h4>Batch Squid Jean Shorts</h4>
-                        <p>Dreamcatcher squid ennui cliche chicharros nes echo  small batch jean shorts hexagon street art knausgaard wolf...</p>
-                    </div>
-                </div>
-            </div>
+             {% endcomment %}
         </div>
     </div>
 </section>
 
 
-
-<section class="our-blog">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="heading">
-                    <h2>Our blog post</h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="blog-post">
-                    <img src="img/blog_post_01.jpg" alt="">
-                    <div class="date">26 Oct 2020</div>
-                    <div class="right-content">
-                        <h4>Stumptown Tofu Schlitz</h4>
-                        <span>Branding / Admin</span>
-                        <p>Skateboard iceland twee tofu shaman crucifix vice before they sold out corn hole occupy drinking vinegar chambra meggings kale chips hexagon...</p>
-                        <div class="text-button">
-                            <a href="#">Continue Reading</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="blog-post">
-                    <img src="img/blog_post_02.jpg" alt="">
-                    <div class="date">21 Oct 2020</div>
-                    <div class="right-content">
-                        <h4>Succulents Hashtag Folk</h4>
-                        <span>Branding / Admin</span>
-                        <p>Skateboard iceland twee tofu shaman crucifix vice before they sold out corn hole occupy drinking vinegar chambra meggings kale chips hexagon...</p>
-                        <div class="text-button">
-                            <a href="#">Continue Reading</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="blog-post">
-                    <img src="img/blog_post_03.jpg" alt="">
-                    <div class="date">11 Oct 2020</div>
-                    <div class="right-content">
-                        <h4>Knaus Sriracha Pinterest</h4>
-                        <span>Dessert / Chef</span>
-                        <p>Skateboard iceland twee tofu shaman crucifix vice before they sold out corn hole occupy drinking vinegar chambra meggings kale chips hexagon...</p>
-                        <div class="text-button">
-                            <a href="#">Continue Reading</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="blog-post">
-                    <img src="img/blog_post_04.jpg" alt="">
-                    <div class="date">03 Oct 2020</div>
-                    <div class="right-content">
-                        <h4>Crucifix Selvage Coat</h4>
-                        <span>Plate / Chef</span>
-                        <p>Skateboard iceland twee tofu shaman crucifix vice before they sold out corn hole occupy drinking vinegar chambra meggings kale chips hexagon...</p>
-                        <div class="text-button">
-                            <a href="#">Continue Reading</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 {% endblock content %}

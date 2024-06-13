@@ -6,16 +6,20 @@
         <div class="row">
             
             {% for cat in cats %}
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-2 col-sm-4">
                 <div class="service-item">
-                    <a href="{% url 'category-restaurant' cat.id  %}">
-
-                    {% if cat.image_33 %}
-                    <img src="{{ cat.image_33.url }}" alt="{{ cat.image_33.url }}">
+                    {% if category_flag == id %}
+                    <a href="{% url 'restaurants:category-id-restaurants' cat.id  %}">
                     {% else %}
-                    <img src="{% static "default.jpg" %}" alt="{{ cat.image_33 }}">
+                    <a href="{% url 'restaurants:category-name-restaurants' cat.name  %}">
                     {% endif %}
-                    <h4>{{cat.name}}</h4>
+
+                    {% if cat.image %}
+                    <img src="{{ cat.image.url }}" alt="{{ cat.image.url }}">
+                    {% else %}
+                    <img src="{% static "default.jpg" %}" alt="{{ cat.image }}">
+                    {% endif %}
+                    <h4 style="font-size: 18px;color:#363e50">{{cat.name}}</h4>
                     </a>
                 </div>
             </div>
