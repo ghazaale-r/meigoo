@@ -35,7 +35,7 @@ class Address(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='categories_images/', blank=True, null=True, default='cat-default.jpg')
-    
+    # restaurants = sdfkj
     # def restaurant_image_upload_to(instance, filename):
     #     # filename = 'skdfhkj.jpg'
     #     filename = f'{instance.id}-{filename}' if instance.id else filename
@@ -90,7 +90,7 @@ class Restaurant(models.Model):
 
 
     def is_main_branch(self):
-        return self.restaurant_parent is None
+        return self.restaurant_parent is None # true false
         # if self.restaurant_parent:
         #     return False
         # return True
@@ -98,14 +98,20 @@ class Restaurant(models.Model):
         
     # راه حل اول
     # بدون استفاده از related_name
+    # همه برنچ ها زمانیکه restaurant_obj برنج اصلی هست 
+    # restaurant_obj.get_all_branches()
     def get_all_branches(self):
         if self.is_main_branch():
             return Restaurant.objects.filter(restaurant_parent=self)
         
-
+    # والد رستوران کدام رستوران دیگر هست
+    # restaurant_obj.restaurant_parent
+    
     def show_related_branches(self):
+        # اگر برنچ اصلی بود که برو تابع بالا رو صدا کن و زیر مجموعه هاش رو بگو
         if self.is_main_branch():
             return self.get_all_branches()
+        # اگر برنج معمولی بود برو خواهر برادراش رو لیست کن نمایش بده
         if self.restaurant_parent:
             return Restaurant.objects.filter(restaurant_parent=self.restaurant_parent)
 
@@ -120,14 +126,15 @@ class Restaurant(models.Model):
     def show_related_branches(self):
         if self.is_main_branch():
             return self.get_all_branches()
+        # شعبه اصلی نیست
         return self.restaurant_parent.branches.all() if self.restaurant_parent else None
 
     
     def update_average_rating(self):
         if self.rating_count > 0:
             self.average_rating = round(self.sum_rating / self.rating_count, 1)
-        else:
-            self.average_rating = 0.0
+        # else:
+        #     self.average_rating = 1.0
         self.save()
 
     
@@ -138,9 +145,23 @@ class Restaurant(models.Model):
 
 
 # from django.contrib.auth.models import User
+# Rating.objects.filter(name = 'zahra')
+# rating_obj = Rating.objects.filter(user__username__contains = 'admin')
+# %like%
+# Rating.objects.filter(user__id = '1')
+# Rating.objects.filter(user__firstname = 'zahra')
+# rating_obj.restaurant.name
+# اسم رستورانی که یوزر ادمین برایش امتیاز قرار داده
+
+
+# resta_obj = Restaurant.objects.get(id=3)
+# resta_obj.اسمی که به حدول rating.user.username
+# resta_obj.rating_set
 class Rating(models.Model):
+    name = models.CharField(max_length=10)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    # restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='rating_set')
     rating = models.IntegerField(default=1, 
                                  validators=[
                                             MinValueValidator(1), 
@@ -172,8 +193,8 @@ class Rating(models.Model):
         super().save(*args, **kwargs)
         
         
-# from django.db.models.signals import post_save, post_delete
-# from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
         
         
 @receiver(post_delete, sender=Rating)
@@ -181,6 +202,7 @@ def update_restaurant_rating_on_delete(sender, instance, **kwargs):
     restaurant = instance.restaurant
     restaurant.rating_count -= 1
     restaurant.total_rating -= instance.rating
+    # restaurant.update_average_rating()
     restaurant.save()
         
         
