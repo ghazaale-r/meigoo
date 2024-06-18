@@ -1,4 +1,8 @@
 from django.contrib import admin
+from django.utils.html import format_html
+from django.urls import reverse
+
+
 from restaurant.models import (Restaurant, 
                                Address,
                                Category,
@@ -6,8 +10,6 @@ from restaurant.models import (Restaurant,
                                Menu,
                                Rating)
 
-from django.utils.html import format_html
-from django.urls import reverse
 
 # Register your models here.
 
