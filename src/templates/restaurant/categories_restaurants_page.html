@@ -2,53 +2,167 @@
 {% load static %}
 
 
+
+{% block style_tag %}
+<style>
+    body {
+        background-color: #eee;
+        font-family: "Poppins", sans-serif;
+        font-weight: 300;
+    }
+
+    {% comment %} .height {
+        height: 100vh;
+    }
+ {% endcomment %}
+
+    .search {
+        position: relative;
+        box-shadow: 0 0 40px rgba(51, 51, 51, .1);
+
+    }
+
+    .search input {
+
+        height: 60px;
+        {% comment %} text-indent: 110px; {% endcomment %}
+        border: 2px solid #d6d4d4;
+
+
+    }
+
+
+    .search input:focus {
+
+        box-shadow: none;
+        border: 2px solid blue;
+
+
+    }
+
+    .search .fa-search {
+
+        position: absolute;
+        top: 20px;
+        left: 16px;
+
+    }
+
+    .search button {
+
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        height: 50px;
+        width: 110px;
+        background: blue;
+
+    }
+</style>
+
+{% endblock style_tag %}
+
+
+
+
+
 {% block content %}
     
+
+<div class="container">
+
+    <div class="row height d-flex justify-content-center align-items-center">
+
+        <div class="col-md-8 col-md-offset-2" style="padding-bottom: 25px;">
+
+            <form class="search" action={% url 'restaurants:search-restaurant' %} method='get'>
+                <input type="text" class="form-control" placeholder="نام رستوران را وارد کنید " name="q">
+                <button class="btn btn-primary">
+                    <i class="fa fa-search"></i>
+                    جست‌وجو
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
     {% include "restaurant/categories_section.html" with cats=categories %}
 
-    <section class="featured-food" style="padding: 0px;">
+    <section class="featured-food" style="padding: 0px;" >
         <div class="container">
             <!-- <div class="row">
                 <div class="heading">
                     <h2>--- New Resturants :) --- </h2>
                 </div>
             </div> -->
-        <div class="row">
-                {% for rest in category_restrnt %}
-                <div class="col-md-3">
-                    <div class="food-item">
-                        <h2 style="font-size: 20px">{{rest.name}}</h2>
+            <div class="row">
+                {% if category_restrnt %}
+                    {% for rest in category_restrnt %}
+                    <div class="col-md-3">
+                        <div class="food-item">
+                            <h2 style="font-size: 20px">{{rest.name}}</h2>
 
-                        {% if rest.image %}
+                            {% if rest.image %}
 
-                        <img src="{{rest.image.url}}" alt="{{rest.image.url}}">
+                            <img src="{{rest.image.url}}" alt="{{rest.image.url}}" style="width: 100%;
+                            height: 100px;
+                            object-fit: cover;">
 
-                        {% else %}
+                            {% else %}
 
-                        <img src="{% static "default.jpg" %}" alt="">
-                        
-                        {% endif %}
+                            <img src="{% static "default.jpg" %}" alt="" style="width: 100%;
+                            height: 100px;
+                            object-fit: cover;">
+                            
+                            {% endif %}
 
-                        {% comment %} <img src="img/breakfast_item.jpg" alt=""> {% endcomment %}
-                        <div class="star-rate"> <span style="color: gray;">({{ rest.rating_count }}) </span> &nbsp;  {{rest.sum_rating}} &nbsp;
-                            <span class="sc-fubCfw dHxJBl">
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="#FFCE00">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 9.62097L2.42572 11.5L3.10832 7.52016L0.216797 4.70163L4.21278 4.12098L5.99984 0.5L7.7869 4.12098L11.7829 4.70163L8.89136 7.52016L9.57395 11.5L5.99984 9.62097Z"></path>
-                                </svg>
-                            </span>
-                        </div>
-                        <div class="text-content">
-                            <h4>resturant categories </h4>
-                            <p>
-                                {% for cat in rest.categories.all %}
-                                {{cat.name}} ,
-                                {% endfor %}
-                            </p>
+                            {% comment %} <img src="img/breakfast_item.jpg" alt=""> {% endcomment %}
+                            <div class="star-rate"> 
+
+                                {% if rest.rating_count > 0 %}
+                                    <span style="color: gray;">({{rest.rating_count}}) </span> &nbsp;  {{rest.average_rating}} &nbsp;
+                                    
+                                    <span class="sc-fubCfw dHxJBl">
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="#FFCE00">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 9.62097L2.42572 11.5L3.10832 7.52016L0.216797 4.70163L4.21278 4.12098L5.99984 0.5L7.7869 4.12098L11.7829 4.70163L8.89136 7.52016L9.57395 11.5L5.99984 9.62097Z"></path>
+                                        </svg>
+                                    </span>
+                                {% else %}
+                                    <span style="color: gray;"> بدون امتیاز  </span>&nbsp; 
+                                    
+                                    <span class="sc-fubCfw dHxJBl">
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="gray">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.99984 9.62097L2.42572 11.5L3.10832 7.52016L0.216797 4.70163L4.21278 4.12098L5.99984 0.5L7.7869 4.12098L11.7829 4.70163L8.89136 7.52016L9.57395 11.5L5.99984 9.62097Z"></path>
+                                        </svg>
+                                    </span> 
+                                {% endif %}
+                            </div>
+                            <div class="text-content">
+                                <h4>resturant categories </h4>
+                                <p>
+                                    {% for cat in rest.categories.all %}
+                                    {{cat.name}} ,
+                                    {% endfor %}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
 
+                {% else %}
+                <div style="padding-bottom:50px">
+                    {% comment %} {% if from_view_1  %}
+                    <h4>هیچ رستورانی در این دسته بندی وجود ندارد</h4>
+                    {% elif  from_view_2 %}
+                    <h4>رستورانی به نام {{rest_name}} وجود ندارد</h4>
+                    {% endif %} {% endcomment %}
+
+                    <h4>{{msg_not_found}}</h4>
+                </div>
+                
+                {% endif %}
                
                
             </div>
