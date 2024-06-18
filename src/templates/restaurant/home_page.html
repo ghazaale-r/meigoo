@@ -24,9 +24,9 @@
 
 
 
-{% if foos_party_flag %}
+{% if food_party_flag %}
 
-<section class="featured-food food-party">
+<section class="featured-food food-party" style="margin-bottom: 100px">
     <div class="container">
         <div class="row">
             <div class="heading">
@@ -79,13 +79,11 @@
 
 
 
-
-
-<section class="featured-food">
+<section class="featured-food" style="padding-top: 0px">
     <div class="container">
         <div class="row">
             <div class="heading">
-                <h2>--- New Resturants :) --- </h2>
+                <h2>--- رستوران های جدید --- </h2>
             </div>
         </div>
         <div class="row">
@@ -93,7 +91,9 @@
             <div class="col-md-3">
                 <div class="food-item">
                     <h2 style="font-size: 20px">{{ restrnt.name }}</h2>
-                    <img src="{{restrnt.image.url}}" alt="" >
+                    <img src="{{restrnt.image.url}}" alt="" style="width: 100%;
+                    height: 100px;
+                    object-fit: cover;">
                     <div class="star-rate"> 
                         {% if restrnt.rating_count > 0 %}
                         <span style="color: gray;">({{restrnt.rating_count}}) </span> &nbsp;  {{restrnt.average_rating}} &nbsp;
@@ -115,6 +115,7 @@
                     </div>
                     <div class="text-content">
                         {% comment %} <h4>resturant categories </h4> {% endcomment %}
+                        {% comment %} <p>{{ restrnt.categories.all|join:", " }}</p> {% endcomment %}
                         <p>{{ restrnt.categories.all|join:", " }}</p>
                         {% comment %} 
                         {% for category in restrnt.categories %}
@@ -176,8 +177,7 @@
                         <p>Dreamcatcher squid ennui cliche chicharros nes echo  small batch jean shorts hexagon street art knausgaard wolf...</p>
                     </div>
                 </div>
-            </div>
-             {% endcomment %}
+            </div> {% endcomment %}
         </div>
     </div>
 </section>
