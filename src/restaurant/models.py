@@ -1,13 +1,15 @@
 from datetime import datetime
+from unidecode import unidecode 
 
-from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import ( MinLengthValidator, MaxLengthValidator,
                                         MinValueValidator, MaxValueValidator)
+from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-        
-        
+from django.utils.text import slugify
+
+ 
 
 
 
@@ -15,6 +17,9 @@ from django.dispatch import receiver
 # sql "create table restaurant (name text, ...")
 
 class Address(models.Model):
+    class Meta:
+        verbose_name = "آدرس"
+        verbose_name_plural = "آدرس ها"
     street = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=50)
@@ -27,13 +32,22 @@ class Address(models.Model):
     def __str__(self):
         return f"{self.state}, {self.city}, {self.street}"
     
-    class Meta:
-        verbose_name = "آدرس"
-        verbose_name_plural = "آدرس ها"
+    
         
         
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    class Meta:
+        verbose_name = "دسته بندی"
+        verbose_name_plural = "دسته بندی ها"
+        
+    name = models.CharField(max_length=100, unique=True)
+    # فیلد slug از روی فیلد نام ایجاد میشود
+    # وچون بنا هست که در url استفاده شود پس باید یونیک باشد در نتیجه ما فیلد نام را نیز یونیک کردیم
+    slug = models.SlugField(max_length=100, unique=True, null=True, blank=True, allow_unicode=True)
+    
+    
+
+
     image = models.ImageField(upload_to='categories_images/', blank=True, null=True, default='cat-default.jpg')
     # restaurants = sdfkj
     # def restaurant_image_upload_to(instance, filename):
@@ -48,15 +62,24 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
-    class Meta:
-        verbose_name = "دسته بندی"
-        verbose_name_plural = "دسته بندی ها"
-
+    
+    def save(self, *args, **kwargs):
+        print('================================')
+        if not self.slug:
+            self.slug = slugify(self.name, allow_unicode=True)
+        super().save(*args, **kwargs)
+        
 
 
 class Restaurant(models.Model):
-    
+    class Meta:
+        ordering = ["updated_at"]
+        verbose_name = "رستوران"
+        verbose_name_plural = "رستوران ها"
+
+
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, null=True, blank=True, allow_unicode=True)
     address = models.OneToOneField(Address, on_delete=models.PROTECT)
     
     image = models.ImageField(upload_to ='restaurants_imgs/%Y/%m/', default='restrnt-default.jpg') 
@@ -83,11 +106,25 @@ class Restaurant(models.Model):
                                         ])
     # main_branch = models.BooleanField(default=False, null=False)
 
-    class Meta:
-        ordering = ["updated_at"]
-        verbose_name = "رستوران"
-        verbose_name_plural = "رستوران ها"
 
+    def save(self, *args, **kwargs):
+        print("938457============93845")
+        # فیلد اسلاگ باید یونیک باشد پس چون اسلاگ از روی نام رستوران هست و ما فیلد نام را یونیک نکرده ایم
+        # برخلاف فیلد نام کتگوری که یونیک کرده ایم 
+        # باید هنگام ذخیره ابجکت رستوران که اسلاگ را نیز ایجاد میکنیم 
+        # باید چک کنیم ان اسلاگ برای رستوران دیگری وجود نداشته باشد 
+        if not self.slug:
+            self.slug = slugify(self.name, allow_unicode=True)
+            unique_slug = self.slug
+            num = 1
+            while Restaurant.objects.filter(slug=unique_slug).exists():
+                unique_slug = f'{self.slug}-{num}'
+                num += 1
+            self.slug = unique_slug
+        
+        super().save(*args, **kwargs)
+
+    
 
     def is_main_branch(self):
         return self.restaurant_parent is None # true false
@@ -99,21 +136,21 @@ class Restaurant(models.Model):
     # راه حل اول
     # بدون استفاده از related_name
     # همه برنچ ها زمانیکه restaurant_obj برنج اصلی هست 
-    # restaurant_obj.get_all_branches()
-    def get_all_branches(self):
-        if self.is_main_branch():
-            return Restaurant.objects.filter(restaurant_parent=self)
+    # # restaurant_obj.get_all_branches()
+    # def get_all_branches(self):
+    #     if self.is_main_branch():
+    #         return Restaurant.objects.filter(restaurant_parent=self)
         
-    # والد رستوران کدام رستوران دیگر هست
-    # restaurant_obj.restaurant_parent
+    # # والد رستوران کدام رستوران دیگر هست
+    # # restaurant_obj.restaurant_parent
     
-    def show_related_branches(self):
-        # اگر برنچ اصلی بود که برو تابع بالا رو صدا کن و زیر مجموعه هاش رو بگو
-        if self.is_main_branch():
-            return self.get_all_branches()
-        # اگر برنج معمولی بود برو خواهر برادراش رو لیست کن نمایش بده
-        if self.restaurant_parent:
-            return Restaurant.objects.filter(restaurant_parent=self.restaurant_parent)
+    # def show_related_branches(self):
+    #     # اگر برنچ اصلی بود که برو تابع بالا رو صدا کن و زیر مجموعه هاش رو بگو
+    #     if self.is_main_branch():
+    #         return self.get_all_branches()
+    #     # اگر برنج معمولی بود برو خواهر برادراش رو لیست کن نمایش بده
+    #     if self.restaurant_parent:
+    #         return Restaurant.objects.filter(restaurant_parent=self.restaurant_parent)
 
         
     # راه حل دوم 
@@ -133,9 +170,6 @@ class Restaurant(models.Model):
     def update_average_rating(self):
         if self.rating_count > 0:
             self.average_rating = round(self.sum_rating / self.rating_count, 1)
-        # else:
-        #     self.average_rating = 1.0
-        self.save()
 
     
     
@@ -158,7 +192,11 @@ class Restaurant(models.Model):
 # resta_obj.اسمی که به حدول rating.user.username
 # resta_obj.rating_set
 class Rating(models.Model):
-    name = models.CharField(max_length=10)
+    class Meta:
+        unique_together = ('user', 'restaurant')
+        verbose_name = "امتیاز"
+        verbose_name_plural = "امتیازات"
+        
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     # restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='rating_set')
@@ -170,8 +208,9 @@ class Rating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        unique_together = ('user', 'restaurant')
+    def __str__(self):
+        return f"{self.user.username} :: {self.restaurant.name} :: {self.rating}"
+    
         
     def save(self, *args, **kwargs):
         """
@@ -190,7 +229,10 @@ class Rating(models.Model):
             
         self.restaurant.sum_rating += self.rating
         self.restaurant.update_average_rating()
+        self.restaurant.save()
         super().save(*args, **kwargs)
+        
+    
         
         
 from django.db.models.signals import post_save, post_delete
@@ -207,21 +249,26 @@ def update_restaurant_rating_on_delete(sender, instance, **kwargs):
         
         
         
-        
-        
-        
-        
-        
-        
 
 class Food(models.Model):
+    class Meta:
+        verbose_name = "غذا"
+        verbose_name_plural = "غذا ها"
+        
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to="foods/", default='food-default.jpg')
     description = models.TextField()
+    
+    def __str__(self):
+        return self.name
+    
 
 
 class Menu(models.Model):
-    
+    class Meta:
+        verbose_name = "منو"
+        verbose_name_plural = "منو ز"
+        
     def restaurant_image_upload_to(instance, filename):
         path = f'restaurants_imgs/{instance.restaurant.id}_{instance.restaurant.name}/{instance.meal}/'
         return f'{path}/{filename}'
@@ -240,7 +287,7 @@ class Menu(models.Model):
     image = models.ImageField(upload_to="foods/", default='food-default.jpg')
     meal = models.CharField(max_length=50, choices=MEAL_CHOICES, default='others')
     food = models.ForeignKey("Food", on_delete=models.SET_NULL, null=True, blank=True)
-    price = models.DecimalField(max_digits=4, decimal_places=3)
+    price = models.DecimalField(max_digits=8, decimal_places=0)
     discount_percent = models.IntegerField(default=0, validators=[
                                             MinValueValidator(0), 
                                             MaxValueValidator(100)
@@ -249,7 +296,9 @@ class Menu(models.Model):
     restaurant = models.ForeignKey("Restaurant", on_delete=models.CASCADE, null=True)
     description = models.TextField()
 
-
+    def __str__(self):
+        return f" {self.get_meal_display()}  -- {self.name} :: {self.food}  --  {self.restaurant.name}"
+    
     def calc_price_after_discount(self):
         # return self.price - (self.discount * self.price)
         return self.price * (100 - self.discount_percent)   # 500 * 90%
@@ -263,7 +312,4 @@ class Menu(models.Model):
 
     def get_food_desc(self):
         return self.description if self.description else self.food.description
-    
 
-class MenuTitle(models.Model):
-    pass
