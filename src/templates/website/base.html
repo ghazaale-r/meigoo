@@ -29,7 +29,8 @@ https://templatemo.com/tm-507-victory
         <!-- اضافه کردن فونت‌های فارسی -->
         <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
 
-
+        {% block style_tag %}
+        {% endblock style_tag %}
         <!-- <link href="https://fonts.googleapis.com/css?family=Spectral:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet"> -->
 
@@ -43,7 +44,7 @@ https://templatemo.com/tm-507-victory
 
      <div class="header">
         <div class="container">
-            <a href="#" class="navbar-brand scroll-top">میگو</a>
+            <a href="{% url 'restaurants:home-page' %}" class="navbar-brand scroll-top">میگو</a>
             <nav class="navbar navbar-inverse" role="navigation">
                 <div class="navbar-header">
                     <button type="button" id="nav-toggle" class="navbar-toggle" data-toggle="collapse" data-target="#main-nav">
@@ -56,10 +57,10 @@ https://templatemo.com/tm-507-victory
                 <!--/.navbar-header-->
                 <div id="main-nav" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="menu.html">Our Menus</a></li>
-                        <li><a href="blog.html">Blog Entries</a></li>
-                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="{% url 'restaurants:home-page' %}">خانه</a></li>
+                        <li><a href="{% url 'restaurants:category-restaurants-all' %}">دسته بندی ها</a></li>
+                        {% comment %} <li><a href="blog.html">Blog Entries</a></li> {% endcomment %}
+                        <li><a href="{% url 'website:contact' %}">تماس با ما</a></li>
                     </ul>
                 </div>
                 <!--/.navbar-collapse-->                
@@ -80,9 +81,6 @@ https://templatemo.com/tm-507-victory
 
 
     {% block header-banner %}
-
-        {% comment %} {% include "website/banner.html" %} {% endcomment %}
-
     {% endblock  %}
 
     
@@ -93,7 +91,7 @@ https://templatemo.com/tm-507-victory
 
     {% block footer %}
 
-         {% include "website/footer.html" %}
+        {% include "website/footer.html" %}
 
     {% endblock footer %}
 
@@ -104,9 +102,9 @@ https://templatemo.com/tm-507-victory
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 
-    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
 
-    <script src="js/plugins.js"></script>
+    <script src="{% static 'js/plugins.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 
     <script type="text/javascript">
