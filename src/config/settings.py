@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     
     # custom apps
     'restaurant',
+    'website'
 ]
 
 MIDDLEWARE = [
