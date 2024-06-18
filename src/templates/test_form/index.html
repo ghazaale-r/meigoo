@@ -1,0 +1,82 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+
+
+
+{% block content %}
+
+<section style="padding:100px;">
+    <div>
+        
+        <form action="{% url 'website:test-form' %}" method="post" >
+            {% csrf_token %}
+            {{ form.as_p }}
+            {{fome.errors}}
+
+            {% comment %} {% for field in form %}
+                <div class="fieldWrapper">
+                    <div  style="color:red">{{ field.errors }}</div>
+                    
+                    {{ field.label_tag }} {{ field }}
+                    {{ field.help_text }}
+                </div>
+            {% endfor %} {% endcomment %}
+            {% comment %} <label for="">نام : </label>
+            <input name="name" type="text">
+            <br>
+             <label for="">ایمیل : </label>
+            <input name="email" type="email">
+            <br>
+            <label for="">موبایل : </label>
+            <input name="phone" type="text" maxlength=11>
+            <br>
+            <label for="">پیام : </label>
+            <input name="msg" type="text"> {% endcomment %}
+
+            <button type="submit" class="btn btn-primary">ثبت فرم</button>
+        </form>
+
+        
+    </div>
+</section>
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} 
+<label for="">ایمیل : </label>
+<input name="email" type="email">
+<br>
+<label for="">موبایل : </label>
+<input name="phone" type="text">
+<br>
+<label for="">پیام : </label>
+<input name="msg" type="text">
+<br>
+
+
+
+# class ContactForm(forms.Form):
+#     name = forms.CharField(label="نام و نام خانوادگی", max_length=100)
+#     email = forms.EmailField(max_length=100)
+#     phone = forms.CharField(max_length=11)
+#     # message = forms.TextField
+#     message = forms.CharField(widget=forms.Textarea)
+    
+    
+{% endcomment %}
