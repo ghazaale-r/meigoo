@@ -6,9 +6,9 @@
         <div class="row">
             
             {% for cat in cats %}
-            <div class="col-md-2 col-sm-4">
+            <div class="col-md-1 col-sm-3">
                 <div class="service-item">
-                    {% if category_flag == id %}
+                    {% if category_flag == 'id' %}
                     <a href="{% url 'restaurants:category-id-restaurants' cat.id  %}">
                     {% else %}
                     <a href="{% url 'restaurants:category-name-restaurants' cat.name  %}">
@@ -19,7 +19,7 @@
                     {% else %}
                     <img src="{% static "default.jpg" %}" alt="{{ cat.image }}">
                     {% endif %}
-                    <h4 style="font-size: 18px;color:#363e50">{{cat.name}}</h4>
+                    <h7 style="font-size: 18px;color:#363e50">{{cat.name}}</h7  >
                     </a>
                 </div>
             </div>
