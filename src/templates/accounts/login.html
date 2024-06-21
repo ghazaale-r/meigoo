@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title>Document</title>
+</head>
+
+<body>
+    {% comment %}
+    اگر چک کردن اینکه یوزر لاگ این شده یا نه توی متد ویو انجام شد اینجا فقط پیام را نمایش دهید
+    {% endcomment %}
+    <p>
+        {{msg}}
+    </p>
+
+    {% comment %}
+    اگر میخواهید در قسمت تمپلیت انجام دهید
+    {% endcomment %}
+
+    {% if request.user.is_authenticated %}
+        <p>{{request.user.username}} is logged in </p>
+    {% else %}
+        <p>user is not authenticated</p>
+    {% endif %}
+
+
+    <!-- <div class="container">
+        <form>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                    placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                    else.</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div> -->
+    
+
+
+    <section class="pb-4">
+        <div>
+
+            <section class="w-100 p-4 d-flex justify-content-center pb-4">
+                <form style="width: 22rem;" action="{% url 'accounts:login' %}" method="post">
+                    {% csrf_token %}
+                    <!-- Email input -->
+                    <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
+                        <label class="form-label" for="form2Example1" style="margin-left: 0px;">Username</label>
+                        <input type="text" id="form2Example1" class="form-control" name="username">
+                        <div class="form-notch">
+                            <div class="form-notch-leading" style="width: 9px;"></div>
+                            <div class="form-notch-middle" style="width: 88.8px;"></div>
+                            <div class="form-notch-trailing"></div>
+                        </div>
+                    </div>
+
+                    <!-- Password input -->
+                    <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
+                        <label class="form-label" for="form2Example2" style="margin-left: 0px;">Password</label>
+                        <input type="password" id="form2Example2" class="form-control" name="pass">
+                        <div class="form-notch">
+                            <div class="form-notch-leading" style="width: 9px;"></div>
+                            <div class="form-notch-middle" style="width: 64.8px;"></div>
+                            <div class="form-notch-trailing"></div>
+                        </div>
+                    </div>
+
+                    <!-- 2 column grid layout for inline styling -->
+                    <div class="row mb-4">
+                        <div class="col d-flex justify-content-center">
+                            <!-- Checkbox -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked="" name="remember">
+                                <label class="form-check-label" for="form2Example31"> Remember me </label>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <!-- Simple link -->
+                            <a href="#!">Forgot password?</a>
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="submit" data-mdb-button-init="" data-mdb-ripple-init=""
+                        class="btn btn-primary btn-block mb-4" data-mdb-button-initialized="true">Sign in</button>
+
+                    <!-- Register buttons -->
+                    <div class="text-center">
+                        <p>Not a member? <a href="#!">Register</a></p>
+                        <p>or sign up with:</p>
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">
+                            <i class="fab fa-google"></i>
+                        </button>
+
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">
+                            <i class="fab fa-github"></i>
+                        </button>
+                    </div>
+                </form>
+            </section>
+          
+
+        </div>
+    </section>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
