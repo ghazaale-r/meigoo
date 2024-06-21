@@ -61,6 +61,15 @@ https://templatemo.com/tm-507-victory
                         <li><a href="{% url 'restaurants:category-restaurants-all' %}">دسته بندی ها</a></li>
                         {% comment %} <li><a href="blog.html">Blog Entries</a></li> {% endcomment %}
                         <li><a href="{% url 'website:contact' %}">تماس با ما</a></li>
+                        {% comment %} {{ request.user.username  }} {% endcomment %}
+                        {% if request.user.is_authenticated %}
+                        
+                        <li><a href="#"> {{ request.user.username  }} </a></li>
+                        <li><a href="{% url 'accounts:logout' %}"> log out </a></li>
+                        {% else %}
+                        <li><a href="{% url 'accounts:login' %}"> ثبت نام/ورود</a></li>
+                        
+                        {% endif %}
                     </ul>
                 </div>
                 <!--/.navbar-collapse-->                
