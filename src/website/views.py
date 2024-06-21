@@ -40,6 +40,8 @@ def test_form_view(request):
     
     if request.method == 'POST':
         form = ContactModelForm(request.POST)
+        # form = ContactModelForm(data=request.POST)
+        # print(form)
         if form.is_valid():
             form.save()
             # create contact object 
