@@ -125,9 +125,8 @@ def search_restaurant(request):
 
 
 
-
-
-
+from django.http import HttpResponse
+from django.db.models import Avg, Count, Min, Max
 def learn_annotate_aggregate(request):
     
     # استفاده از 
@@ -136,8 +135,10 @@ def learn_annotate_aggregate(request):
     categories = Category.objects.annotate(avg_views=Avg('restaurants__count_view'))
     
     for category in categories:
+        print(category.restaurants.all())
         print(f"Category: {category.name}, Average Views: {category.avg_views}")
         
     ress = Restaurant.objects.aggregate(min_order=Min("order_count"), max_price=Max("order_count"))
-    for red in ress:
-        print(red)
+    print(ress)
+        
+    return HttpResponse('salam')
