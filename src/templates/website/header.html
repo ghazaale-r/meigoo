@@ -17,6 +17,12 @@
                     <li><a href="{% url 'restaurants:category-restaurants-all' %}">Categories</a></li>
                     {% comment %} <li><a href="blog.html">Blog Entries</a></li> {% endcomment %}
                     <li><a href="{% url 'website:contact' %}">Contact Us</a></li>
+                    {% if request.user.is_authenticated %}
+                    <li><a href="#">{{ request.user.username }}</a></li>
+                    <li><a href="{% url 'accounts:logout' %}"> log out </a></li>
+                    {% else %}
+                    <li><a href="{% url 'accounts:login' %}">login</a></li>
+                    {% endif %}
                 </ul>
             </div>
             <!--/.navbar-collapse-->                
