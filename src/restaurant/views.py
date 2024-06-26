@@ -8,8 +8,9 @@ from django.utils import timezone
 
 from .models import Category, Restaurant
 
+from django.contrib.auth.decorators import login_required
 
-
+# @login_required
 def home_page_view(request):
     # show all categories
     categories_list = Category.objects.all()
@@ -44,7 +45,7 @@ def home_page_view(request):
 
 
 
-
+@login_required
 def category_restaurants_by_name(request, category_name=None):
     print('category_name :', category_name)
     categories_list = Category.objects.all()
@@ -126,7 +127,7 @@ def search_restaurant(request):
 
 
 from django.http import HttpResponse
-from django.db.models import Avg, Count, Min, Max
+from django.db.models import Avg, Count, Min, Max, Sum
 def learn_annotate_aggregate(request):
     
     # استفاده از 
@@ -138,6 +139,10 @@ def learn_annotate_aggregate(request):
         print(category.restaurants.all())
         print(f"Category: {category.name}, Average Views: {category.avg_views}")
         
+    categories = Category.objects.annotate(total_views=Sum('restaurants__count_view'))
+    for category in categories:
+        print(f"Category: {category.name}, Total Views: {category.total_views}")
+            
     ress = Restaurant.objects.aggregate(min_order=Min("order_count"), max_price=Max("order_count"))
     print(ress)
         

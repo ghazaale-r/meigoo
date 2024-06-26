@@ -61,8 +61,9 @@
             <section class="w-100 p-4 d-flex justify-content-center pb-4">
                 <form style="width: 22rem;" action="{% url 'accounts:login' %}" method="post">
                     {% csrf_token %}
+                    {{form.as_p}}
                     <!-- Email input -->
-                    <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
+                    {% comment %} <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
                         <label class="form-label" for="form2Example1" style="margin-left: 0px;">Username</label>
                         <input type="text" id="form2Example1" class="form-control" name="username">
                         <div class="form-notch">
@@ -70,10 +71,10 @@
                             <div class="form-notch-middle" style="width: 88.8px;"></div>
                             <div class="form-notch-trailing"></div>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
 
                     <!-- Password input -->
-                    <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
+                    {% comment %} <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
                         <label class="form-label" for="form2Example2" style="margin-left: 0px;">Password</label>
                         <input type="password" id="form2Example2" class="form-control" name="pass">
                         <div class="form-notch">
@@ -81,7 +82,7 @@
                             <div class="form-notch-middle" style="width: 64.8px;"></div>
                             <div class="form-notch-trailing"></div>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
 
                     <!-- 2 column grid layout for inline styling -->
                     <div class="row mb-4">
@@ -105,7 +106,7 @@
 
                     <!-- Register buttons -->
                     <div class="text-center">
-                        <p>Not a member? <a href="#!">Register</a></p>
+                        <p>Not a member? <a href="{% url 'accounts:signup' %}">Register</a></p>
                         <p>or sign up with:</p>
                         <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
                             class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">

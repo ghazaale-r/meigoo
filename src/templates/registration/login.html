@@ -59,7 +59,7 @@
         <div>
 
             <section class="w-100 p-4 d-flex justify-content-center pb-4">
-                <form style="width: 22rem;" action="{% url 'accounts:signup' %}" method="post">
+                <form style="width: 22rem;" action="{% url 'login' %}" method="post">
                     {% csrf_token %}
                     {{form.as_p}}
                     <!-- Email input -->
@@ -71,22 +71,21 @@
                             <div class="form-notch-middle" style="width: 88.8px;"></div>
                             <div class="form-notch-trailing"></div>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
 
                     <!-- Password input -->
-                    <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
+                    {% comment %} <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
                         <label class="form-label" for="form2Example2" style="margin-left: 0px;">Password</label>
-                        {{form.password1}}
                         <input type="password" id="form2Example2" class="form-control" name="pass">
                         <div class="form-notch">
                             <div class="form-notch-leading" style="width: 9px;"></div>
                             <div class="form-notch-middle" style="width: 64.8px;"></div>
                             <div class="form-notch-trailing"></div>
                         </div>
-                    </div>  {% endcomment %}
+                    </div> {% endcomment %}
 
                     <!-- 2 column grid layout for inline styling -->
-                    {% comment %} <div class="row mb-4">
+                    <div class="row mb-4">
                         <div class="col d-flex justify-content-center">
                             <!-- Checkbox -->
                             <div class="form-check">
@@ -99,14 +98,36 @@
                             <!-- Simple link -->
                             <a href="#!">Forgot password?</a>
                         </div>
-                    </div> {% endcomment %}
+                    </div>
 
                     <!-- Submit button -->
                     <button type="submit" data-mdb-button-init="" data-mdb-ripple-init=""
-                        class="btn btn-primary btn-block mb-4" data-mdb-button-initialized="true">Register</button>
+                        class="btn btn-primary btn-block mb-4" data-mdb-button-initialized="true">Sign in</button>
 
                     <!-- Register buttons -->
-                    
+                    <div class="text-center">
+                        {% comment %} <p>Not a member? <a href="{% url 'accounts:signup' %}">Register</a></p> {% endcomment %}
+                        <p>or sign up with:</p>
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">
+                            <i class="fab fa-google"></i>
+                        </button>
+
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+
+                        <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                            class="btn btn-link btn-floating mx-1" data-mdb-button-initialized="true">
+                            <i class="fab fa-github"></i>
+                        </button>
+                    </div>
                 </form>
             </section>
           

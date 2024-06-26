@@ -22,9 +22,22 @@
                     <div class="section-heading">
                         <h2 style="text-align:right">پیام</h2>
                     </div>
-                    <form id="contact" action="" method="post">
+                    <form id="contact" action="{% url 'website:contact' %}" method="post">
+                        {% csrf_token %}
+
                         <div class="row">
                             <div class="col-md-6">
+                                {% if request.user.is_authenticated %}
+                                <fieldset>
+                                    <input name="name" type="hidden" class="form-control" id="name" placeholder="نام خود را وارد کنید" required="" value="{{request.user.first_name}}">
+                                </fieldset>
+                                <fieldset>
+                                    <input name="email" type="hidden" class="form-control" id="email" placeholder="ایمیلتان را وارد کنید" required="" value={{request.user.email}}>
+                                </fieldset>
+                                <fieldset>
+                                    <input name="phone" type="text" class="form-control" id="phone" placeholder="شماره همراه" required="">
+                                </fieldset>
+                                {% else %}
                                 <fieldset>
                                     <input name="name" type="text" class="form-control" id="name" placeholder="نام خود را وارد کنید" required="">
                                 </fieldset>
@@ -34,6 +47,9 @@
                                 <fieldset>
                                     <input name="phone" type="text" class="form-control" id="phone" placeholder="شماره همراه" required="">
                                 </fieldset>
+                                {% endif %}
+                                
+                                
                             </div>
                             <div class="col-md-6">
                                 <fieldset>
