@@ -4,12 +4,15 @@ from django.contrib.auth import authenticate, login
 
 from django.http import HttpResponse
 
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 # from django.contrib.auth.models import User
  
 # Create your views here.
 
 from django.contrib.sessions.models import Session
+
+from django.urls import reverse
+
 
 def test(request):
     context = {}
@@ -54,7 +57,9 @@ def test(request):
 #     return render(request, 'accounts/login.html')
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-def login_view(request):
+
+def login_view222(request):
+    # None.is_authenticated error
     if request.user.is_authenticated:
         # redirect home page --- user profile
         return redirect('/')
@@ -81,10 +86,13 @@ def login_view(request):
         
     return render(request, 'accounts/login.html')
 
+
+
 # def login_view(request):
 #     print(request.user)
 #     # این ۴ خط بعدی را یا میتوان درون متد ویو انجام داد 
 #     # یا درون فایل تمپلیت
+
 #     # درون متد ویو
 #     if request.user.is_authenticated:
 #         msg = f"{request.user.username} is logged in "
@@ -94,25 +102,6 @@ def login_view(request):
 #     context = {
 #         'msg' : msg
 #     }
-#     return render(request, 'accounts/login.html')
-
-
-
-# def login_view2(request):
-#     if request.method == 'POST':
-#         print(request.POST)
-        
-#         username = request.POST["username"]
-#         password = request.POST["pass"]
-        
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             return redirect('/')
-#             # Redirect to a success page.
-#         else:
-#             # Return an 'invalid login' error message.
-#             return HttpResponse(' invalid login')
 #     return render(request, 'accounts/login.html')
 
 
@@ -140,11 +129,72 @@ def login_view(request):
 #     }
 #     return render(request, 'accounts/login.html', context)
 
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        # redirect home page --- user profile
+        return redirect('/')
+    
+    form = AuthenticationForm()
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                 # Redirect to a success page.
+                return redirect('/')
+                # return HttpResponse("User has logged in!")
+            else:
+                return HttpResponse('Invalid login')
+            
+    context = {'form':form}
+    return render(request, 'accounts/login.html', context=context)
+
 # ==================================================
+from django.contrib.auth import logout
+
+from django.contrib.auth.decorators import login_required
+
+@login_required()
 def logout_view(request):
-    return 
+    # if request.user.is_authenticated():
+    logout(request)
+    return redirect('/')
+    
+        # return 
 
 
 # ==================================================
+from django.contrib.auth.models import User
+
 def signup_view(request):
-    return render(request, 'accounts/signup.html')
+    form = UserCreationForm()
+    
+    if request.method == 'POST':
+        form = UserCreationForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            # redirect to login page
+            # return redirect('accounts/login')
+            return redirect(reverse('accounts:login'))
+        # else:
+        #     return HttpResponse('invalid sign up')
+            
+            # username = form.cleaned_data['username']
+            # password = form.cleaned_data['password']
+            # user_obj = User()
+            # user_obj.username = username
+            # user_obj.password = password
+            # user_obj.save()
+            
+
+        
+    
+    context = {
+        'form' : form
+    }
+    return render(request, 'accounts/signup.html', context)
