@@ -1,8 +1,27 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Contact
+
+from .forms import NameForm, ContactForm, ContactModelForm
+
+
 # Create your views here.
 def contact_page(request):
+    
+    form = ContactModelForm()
+    
+    if request.method == 'POST':
+        # data = {
+        #     'name' : 'ali'
+        #     'email' : 'sdlfj@lkd.com'
+        # }
+        # data.update(request.POST)
+        form = ContactModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+    
     banner_message = {
         'h4' : 'ارتباط با ما',
         'msg' : '',
@@ -10,7 +29,8 @@ def contact_page(request):
         
     }
     context = {
-        'banner_message' : banner_message
+        'banner_message' : banner_message,
+        'form' : form
     }
     return render(request, 'website\contact_page.html', context=context)
 
@@ -31,8 +51,6 @@ def contact_page(request):
 
 
 
-
-from .forms import NameForm, ContactForm, ContactModelForm
 
 def test_form_view(request):
     # request . method == GET
