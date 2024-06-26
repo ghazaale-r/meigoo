@@ -137,6 +137,11 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS  = [BASE_DIR / 'statics']
 
+
+
+LOGIN_REDIRECT_URL = '/'
+
+
 # STATIC_ROOT = 'kdgjldfk' # collectstatics
 # media . upload files
 MEDIA_URL = '/media/'
