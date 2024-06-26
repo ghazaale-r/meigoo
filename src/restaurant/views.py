@@ -45,7 +45,7 @@ def home_page_view(request):
 
 
 
-@login_required
+# @login_required
 def category_restaurants_by_name(request, category_name=None):
     print('category_name :', category_name)
     categories_list = Category.objects.all()
@@ -64,6 +64,24 @@ def category_restaurants_by_name(request, category_name=None):
         'category_restrnt' : category_restrnt,
         'category_flag': 'name',
         # 'from_view_1' : from_view_1
+        'msg_not_found' : 'هیچ رستورانی دراین دسته بندی وجود ندارد'
+    }
+    
+    return render(request, 'restaurant/categories_restaurants_page.html', context)
+
+
+def category_restaurants_by_slug(request, slug=None):
+    print('slug :', slug)
+    categories_list = Category.objects.all()
+    category_restrnt = Restaurant.objects.all()
+    
+    if slug :
+        category_restrnt = Restaurant.objects.prefetch_related('categories').filter(categories__slug__icontains=slug)
+   
+    context = {
+        'categories' : categories_list,
+        'category_restrnt' : category_restrnt,
+        'category_flag': 'name',
         'msg_not_found' : 'هیچ رستورانی دراین دسته بندی وجود ندارد'
     }
     
