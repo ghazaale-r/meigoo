@@ -36,19 +36,6 @@ urlpatterns = [
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 from django.urls import path
 from .create_restrnt_views import create_address, create_restaurant
 
