@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=
+    , initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        a {
+            color:blue;
+            text-decoration: None
+        }
+        a.delete {
+            color:red
+        }
+        a.detail {
+            color:green
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        Categories :
+    </h1>
+    <p>
+        {% comment %} {{categories}} {% endcomment %}
+        {{hi}}
+    </p>
+
+    <ul>
+        {% for cat_obj in categories  %}
+        <li>
+            <a href="{% url 'website:category-detail' cat_obj.id %}">
+                <h3> - {{cat_obj.name}}</h3>
+            </a>
+            <a href="{% url 'website:category-detail' cat_obj.slug %}" class='detail'>
+                <h5>Detail</h5>
+            </a> 
+            <a href="{% url 'website:category-edit' cat_obj.id %}">
+                <h5>Edit</h5>
+            </a> 
+            <a href="{% url 'website:category-del' cat_obj.id %}" class="delete">
+                <h5>Delete</h5>
+            </a> 
+        </li>
+        <hr>
+        {% endfor %}
+    </ul>
+    
+</body>
+</html>
