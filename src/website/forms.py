@@ -11,6 +11,10 @@ class ContactForm(forms.Form):
     phone = forms.CharField(label="تلفن" ,max_length=11, help_text="شماره تلفن شما باید کمتراز ۱۱ کارکتر باشد")
     msg = forms.CharField(label="پیام", widget=forms.Textarea)
     
+    def send_email(self):
+        print("مثلا ایمیل ارسال شد XD")
+        # send email using the self.cleaned_data dictionary
+        pass
     
 class ContactModelForm(forms.ModelForm):
     class Meta:
@@ -23,3 +27,10 @@ class ContactModelForm(forms.ModelForm):
         help_texts = {
             "phone": 'باید کمتر از ۱۱ رقم باشد',
         }
+        
+
+from restaurant.models import Category
+class CategoryModelForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = '__all__'
