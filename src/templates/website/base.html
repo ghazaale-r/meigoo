@@ -41,11 +41,12 @@ https://templatemo.com/tm-507-victory
     {% comment %} این قسمت کلی هست
      {% endcomment %}
 
-
+     =============================
+     {{additional_data}}
      <div class="header">
         <div class="container">
-            {{request.user}}
-            {{request.user.is_authenticated}}
+            {% comment %} {{request.user}}
+            {{request.user.is_authenticated}} {% endcomment %}
             <a href="{% url 'restaurants:home-page' %}" class="navbar-brand scroll-top">میگو</a>
             <nav class="navbar navbar-inverse" role="navigation">
                 <div class="navbar-header">
@@ -60,16 +61,17 @@ https://templatemo.com/tm-507-victory
                 <div id="main-nav" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="{% url 'restaurants:home-page' %}">خانه</a></li>
-                        <li><a href="{% url 'restaurants:category-restaurants-all' %}">دسته بندی ها</a></li>
+                        <li><a href="{% url 'restaurants:category-slug-restaurants' 'all' %}">دسته بندی ها</a></li>
                         {% comment %} <li><a href="blog.html">Blog Entries</a></li> {% endcomment %}
                         <li><a href="{% url 'website:contact' %}">تماس با ما</a></li>
                         {% comment %} {{ request.user.username  }} {% endcomment %}
                         {% if request.user.is_authenticated %}
                         
                         <li><a href="#"> {{ request.user.username  }} </a></li>
-                        <li><a href="{% url 'logout' %}"> log out </a></li>
+                        <li><a href="{% url 'restaurants:add_address' %}"> افزودن رستوران</a></li>
+                        <li><a href="{% url 'accounts:logout' %}"> خروج </a></li>
                         {% else %}
-                        <li><a href="{% url 'login' %}"> ثبت نام/ورود</a></li>
+                        <li><a href="{% url 'accounts:login' %}"> ثبت نام/ورود</a></li>
                         
                         {% endif %}
                     </ul>
