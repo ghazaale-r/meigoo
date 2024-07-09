@@ -59,7 +59,7 @@
         <div>
 
             <section class="w-100 p-4 d-flex justify-content-center pb-4">
-                <form style="width: 22rem;" action="{% url 'login' %}" method="post">
+                <form style="width: 22rem;" action="{% url 'accounts:login' %}" method="post">
                     {% csrf_token %}
                     {{form.as_p}}
                     <!-- Email input -->
