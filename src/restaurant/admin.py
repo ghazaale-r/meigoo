@@ -31,7 +31,7 @@ class RestaurantAdmin(admin.ModelAdmin):
     
     custom_column_id_name.short_description = "ID Name"
     custom_column_id_name.admin_order_field = "id"
-    
+
     def custom_address(self, obj):
         value = obj.address
         string = value if value else "N/A"

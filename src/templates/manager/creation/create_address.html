@@ -1,0 +1,23 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+
+
+
+{% block content %}
+
+<section style="padding:100px;">
+    <div>
+
+        <form action="{% url 'restaurants:add_address' %}" method="post" >
+            {% csrf_token %}
+            {{ form.as_p }}
+      
+            <button type="submit" class="btn btn-primary">ثبت فرم</button>
+        </form>
+
+        
+    </div>
+</section>
+
+{% endblock content %}

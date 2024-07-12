@@ -1,6 +1,8 @@
 <div class="header">
     <div class="container">
-        <a href="#" class="navbar-brand scroll-top">میگو</a>
+        {% comment %} {{request.user}}
+        {{request.user.is_authenticated}} {% endcomment %}
+        <a href="{% url 'restaurants:home-page' %}" class="navbar-brand scroll-top">میگو</a>
         <nav class="navbar navbar-inverse" role="navigation">
             <div class="navbar-header">
                 <button type="button" id="nav-toggle" class="navbar-toggle" data-toggle="collapse" data-target="#main-nav">
@@ -13,15 +15,27 @@
             <!--/.navbar-header-->
             <div id="main-nav" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'restaurants:home-page' %}">Home</a></li>
-                    <li><a href="{% url 'restaurants:category-restaurants-all' %}">Categories</a></li>
+                    <li><a href="{% url 'restaurants:home-page' %}">خانه</a></li>
+                    <li><a href="{% url 'restaurants:category-slug-restaurants' 'all' %}">دسته بندی ها</a></li>
                     {% comment %} <li><a href="blog.html">Blog Entries</a></li> {% endcomment %}
-                    <li><a href="{% url 'website:contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'website:contact' %}">تماس با ما</a></li>
+                    {% comment %} {{ request.user.username  }} {% endcomment %}
                     {% if request.user.is_authenticated %}
-                    <li><a href="#">{{ request.user.username }}</a></li>
-                    <li><a href="{% url 'accounts:logout' %}"> log out </a></li>
+                    
+                    <li><a href="#"> ID : {{ request.user.id }} </a></li>
+                    <li><a href="#"> Email : {{ request.user.email  }} </a></li>
+                    {% if request.user.is_staff %}
+                    <li><a href="{% url 'accounts:manager_profile' request.user.id %}"> پروفایل </a></li>
+                    <li><a href="{% url 'restaurants:add_address' %}"> افزودن رستوران</a></li>
                     {% else %}
-                    <li><a href="{% url 'accounts:login' %}">login</a></li>
+                    <li><a href="{% url 'accounts:customer_profile' request.user.id %}"> پروفایل </a></li>
+                    {% endif %}
+                    <li><a href="{% url 'accounts:logout' %}"> خروج </a></li>
+                    {% else %}
+                    <li><a href="{% url 'accounts:restaurant_manager_signup' %}">  ثبت نام فروشندگان </a></li>
+                    <li><a href="{% url 'accounts:customer_signup' %}">  ثبت نام مشتریان </a></li>
+                    <li><a href="{% url 'accounts:login' %}"> ورود </a></li>
+                    
                     {% endif %}
                 </ul>
             </div>

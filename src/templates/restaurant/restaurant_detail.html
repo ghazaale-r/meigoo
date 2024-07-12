@@ -1,0 +1,45 @@
+{% extends "website/base.html" %}
+
+{% block content %}
+
+
+<div class="container">
+    <h1>{{ restaurant.name }}</h1>
+    <p><strong>آدرس:</strong> {{ restaurant.address }}</p>
+    <p><strong>دسته بندی    :</strong> 
+        {% for category in restaurant.categories.all %}
+            {{ category.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    <!-- <p><strong>Order Count:</strong> {{ restaurant.order_count }}</p>
+    <p><strong>View Count:</strong> {{ restaurant.count_view }}</p>
+    <p><strong>Rating:</strong> {{ restaurant.average_rating }} ({{ restaurant.rating_count }} ratings)</p>
+    <p><strong>Open/Close Status:</strong> 
+        {% if restaurant.open_close %}
+            Open
+        {% else %}
+            Closed
+        {% endif %}
+    </p> -->
+    <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}">
+    {% if restaurant.is_main_branch %}
+    شعبه اصلی
+    <p><strong>شعبات:</strong>
+        {% for branch in restaurant.get_all_branches %}
+            {{ branch.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    {% else %}
+    <p><strong>شعبه اصلی:</strong>
+        
+        <h3>
+            <a href="{% url 'restaurants:restaurant_detail' restaurant.restaurant_parent.id %}">  {{ restaurant.restaurant_parent.name }}</a>
+        </h3>
+
+    </p>
+    {% endif %}
+</div>
+
+
+    
+{% endblock content %}

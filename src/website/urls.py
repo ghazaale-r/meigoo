@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from .views import *
 
 from django.views.generic import TemplateView, RedirectView
@@ -140,13 +140,14 @@ urlpatterns = [
     
     path('category/',  CategoryListView.as_view(), name='category-list'),
     # path('category/<int:id>/',  CategoryDetailView.as_view(), name='category-detail'),
-    path('category/<int:pk>/',  CategoryDetailView.as_view(), name='category-detail'),
-    path('category/<slug:slug>',  CategoryDetailView.as_view(), name='category-detail'),
-
+    # path('category/<int:pk>/',  CategoryDetailView.as_view(), name='category-detail'),
+    path('category/<str:slug>',  CategoryDetailView.as_view(), name='category-detail'),
+    # re_path(r'category/(?P<slug>[\w\d*-]+)/$', 
+    #         CategoryDetailView.as_view(), name='category-slug-restaurants'),
     # path('category/create/form',  CategoryFormView.as_view(), name='category-create'),
-    # path('contact/create/',  ContactFormView.as_view(), name='contact-create'),
+    path('contact/create/',  ContactFormView.as_view(), name='contact-create'),
 
-    # path('category/create/',  CategoryCreateView.as_view(), name='category-create'),
+    path('category/create/',  CategoryCreateView.as_view(), name='category-create'),
     
     path('category/<int:pk>/edit/',  CategoryUpdateView.as_view(), name='category-edit'),
     

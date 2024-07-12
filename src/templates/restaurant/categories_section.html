@@ -8,12 +8,12 @@
             {% for cat in cats %}
             <div class="col-md-1 col-sm-3">
                 <div class="service-item">
-                    {% if category_flag == 'id' %}
+                    {% comment %} {% if category_flag == 'id' %}
                     <a href="{% url 'restaurants:category-id-restaurants' cat.id  %}">
-                    {% else %}
-                    <a href="{% url 'restaurants:category-name-restaurants' cat.name  %}">
-                    {% endif %}
-
+                    {% else %} {% endcomment %}
+                    <a href="{% url 'restaurants:category-slug-restaurants' cat.slug  %}">
+                    {% comment %} {% endif %} {% endcomment %}
+                    {% comment %} {{cat.slug}} {% endcomment %}
                     {% if cat.image %}
                     <img src="{{ cat.image.url }}" alt="{{ cat.image.url }}" style="width: 100%;
                     height: 70px;

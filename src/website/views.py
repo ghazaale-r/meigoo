@@ -1,13 +1,12 @@
-from django.shortcuts import render
+
 from django.http import HttpResponse
-from .models import Contact
-
-from .forms import NameForm, ContactForm, ContactModelForm
-from .forms import CategoryModelForm
-
-# class based views
+from django.shortcuts import render, get_object_or_404, reverse
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, RedirectView
-
+# class based views
 from django.views.generic import (
                             ListView,
                             DetailView,
@@ -16,27 +15,19 @@ from django.views.generic import (
                             UpdateView,
                             DeleteView
                                   )
-from django.views.generic.detail import DetailView
-from django.shortcuts import get_object_or_404
+
+
 from restaurant.models import Category
-
-from django.shortcuts import reverse
-from django.urls import reverse_lazy
-# from django.views.generic.edit import FormView
-
-
-
-
-
+from .models import Contact
+from .forms import (
+                NameForm, 
+                ContactForm, 
+                ContactModelForm,
+                CategoryModelForm
+                )
 
 
 
-
-from django.http import HttpResponse
-from django.views import View
-
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -246,7 +237,7 @@ class CategoryFormView(FormView):
     
     
 class ContactFormView(FormView):
-    # template_name = "contact.html"
+    template_name = "contact.html"
     form_class = ContactModelForm
     # success_url = reverse('website:category-list')
     success_url = reverse_lazy('website:category-list')

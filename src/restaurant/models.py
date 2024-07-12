@@ -1,7 +1,7 @@
 from datetime import datetime
 from unidecode import unidecode 
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.core.validators import ( MinLengthValidator, MaxLengthValidator,
                                         MinValueValidator, MaxValueValidator)
 from django.db import models
@@ -9,8 +9,9 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
 
- 
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 
 # Create your models here.
@@ -30,7 +31,7 @@ class Address(models.Model):
                                ])
 
     def __str__(self):
-        return f"{self.state}, {self.city}, {self.street}"
+        return f"{self.id} {self.state}, {self.city}, {self.street}"
     
     
         
@@ -39,7 +40,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "دسته بندی"
         verbose_name_plural = "دسته بندی ها"
-        
+    # id 
     name = models.CharField(max_length=100, unique=True)
     # فیلد slug از روی فیلد نام ایجاد میشود
     # وچون بنا هست که در url استفاده شود پس باید یونیک باشد در نتیجه ما فیلد نام را نیز یونیک کردیم
@@ -77,9 +78,10 @@ class Restaurant(models.Model):
         verbose_name = "رستوران"
         verbose_name_plural = "رستوران ها"
 
-
+    manager = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, null=True, blank=True, allow_unicode=True)
+    
     address = models.OneToOneField(Address, on_delete=models.PROTECT)
     
     image = models.ImageField(upload_to ='restaurants_imgs/%Y/%m/', default='restrnt-default.jpg') 
@@ -108,18 +110,20 @@ class Restaurant(models.Model):
 
 
     def save(self, *args, **kwargs):
-        print("938457============93845")
         # فیلد اسلاگ باید یونیک باشد پس چون اسلاگ از روی نام رستوران هست و ما فیلد نام را یونیک نکرده ایم
         # برخلاف فیلد نام کتگوری که یونیک کرده ایم 
         # باید هنگام ذخیره ابجکت رستوران که اسلاگ را نیز ایجاد میکنیم 
         # باید چک کنیم ان اسلاگ برای رستوران دیگری وجود نداشته باشد 
         if not self.slug:
+            
             self.slug = slugify(self.name, allow_unicode=True)
+            
             unique_slug = self.slug
             num = 1
             while Restaurant.objects.filter(slug=unique_slug).exists():
                 unique_slug = f'{self.slug}-{num}'
                 num += 1
+                
             self.slug = unique_slug
         
         super().save(*args, **kwargs)

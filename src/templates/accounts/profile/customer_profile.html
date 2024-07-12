@@ -1,0 +1,15 @@
+{% extends "website/base.html" %}
+
+{% block content %}
+
+<section class="container">
+    <h1>customer Profile</h1>
+
+    <p>Email: {{ user.email }}</p>
+    <p>First Name: {{ user.profile.first_name }}</p>
+    <p>Last Name: {{ user.profile.last_name }}</p>
+    <p>Description: {{ user.profile.description }}</p>
+
+</section>
+
+{% endblock content %}

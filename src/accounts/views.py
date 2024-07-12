@@ -1,17 +1,11 @@
-from django.shortcuts import render, redirect
 
 from django.contrib.auth import authenticate, login
-
-from django.http import HttpResponse
-
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-# from django.contrib.auth.models import User
- 
-# Create your views here.
-
 from django.contrib.sessions.models import Session
-
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from .models import RestaurantManager, Customer
 
 
 def test(request):
@@ -50,8 +44,6 @@ def test(request):
     response.set_cookie('user_id', '123456')
     return response
 
-    
-
 # ==================================================
 # def login_view(request):
 #     return render(request, 'accounts/login.html')
@@ -87,7 +79,6 @@ def login_view222(request):
     return render(request, 'accounts/login.html')
 
 
-
 # def login_view(request):
 #     print(request.user)
 #     # این ۴ خط بعدی را یا میتوان درون متد ویو انجام داد 
@@ -103,7 +94,6 @@ def login_view222(request):
 #         'msg' : msg
 #     }
 #     return render(request, 'accounts/login.html')
-
 
 
 
@@ -146,6 +136,12 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                  # Redirect to a success page.
+                if request.GET.get('next'):
+                    return redirect(request.GET['next'])
+                
+                if RestaurantManager.objects.filter(pk=user.pk).exists():
+                    return redirect(reverse('accounts:manager_profile', kwargs={'pk': user.pk}))
+                
                 return redirect('/')
                 # return HttpResponse("User has logged in!")
             else:
@@ -171,7 +167,7 @@ def logout_view(request):
 # ==================================================
 from django.contrib.auth.models import User
 
-def signup_view(request):
+def signup_view(request):  
     form = UserCreationForm()
     
     if request.method == 'POST':
@@ -198,3 +194,4 @@ def signup_view(request):
         'form' : form
     }
     return render(request, 'accounts/signup.html', context)
+

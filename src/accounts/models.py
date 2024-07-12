@@ -1,5 +1,8 @@
 from django.db import models
 
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
 from django.contrib.auth.models import (AbstractUser, User,
     BaseUserManager, AbstractBaseUser, PermissionsMixin)
 
@@ -10,6 +13,8 @@ from django.core.validators import ( MinLengthValidator, MaxLengthValidator,
                                         MinValueValidator, MaxValueValidator)
 # Create your models here.
 from django.conf import settings
+
+
 
 class UserManager(BaseUserManager):
     """
@@ -46,9 +51,6 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Custom user model - use email instead of username
@@ -67,6 +69,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     # یکسری موراد دیگه مثل نام و نام خانوادگی اگر بخواهیم اجباری باشند
     REQUIRED_FIELDS = []
     
+    class Meta:
+        
+        verbose_name="کاربر"
+        verbose_name_plural = 'کاربران' 
 
     # objects = CustomUserManager()
     objects = UserManager()
@@ -77,21 +83,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_profile_url():
         return 'profile/'
     
-    
-    
+    def is_manager(self):
+        return self.is_staff and not self.is_superuser and not self.is_customer
+     
+    def is_is_customer(self):
+        return not self.is_staff and self.is_customer
+     
     
 # مدیر رستوران 
 # ثبت نام انجام دهد 
 
 
-# فرم ثبت نام 
-
+## فرم ثبت نام 
 # شماره تلفن یا ایمیل
 # پسورد
 # نام رستوران
 # ادرس رستوران
-
-
 
 # erd
 
@@ -137,9 +144,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 # is_staff = True
 
 
-    
-    
-
 class Admin(User):
     # filed email password
     # نری یه جدول جدید بسازی
@@ -147,6 +151,8 @@ class Admin(User):
     
     class Meta:
         proxy = True
+        verbose_name="ادمین"
+        verbose_name_plural = 'ادمین ها' 
         
     def get_profile_url():
         return 'admin/dashboard/'
@@ -166,37 +172,12 @@ class Admin(User):
 
 # redirect request.user.get_profile_url
 
-
-
-
 # صفحه ثبت نام
 
 # مدیر رستوان 
 # مشتری
 
 # ایجاد 
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 # from django.conf import settings
 # user_class = settings.Auth user model 
@@ -224,20 +205,11 @@ class Admin(User):
     
     
 
-
-
-
-
-
 # customer 
 # is_customer  = T / F
 
 # address - multi  - 1
 # default - address 
-
-
-
-
 
 
 
@@ -259,22 +231,6 @@ class Admin(User):
   
 # # is_superuser = F
 # # is_staff = F  
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -319,6 +275,8 @@ class RestaurantManager(User):
 
     class Meta:
         proxy = True
+        verbose_name="مدیر رستوان"
+        verbose_name_plural = 'مدیر رستوران ها' 
 
     def get_profile_url(self):
         return "/restaurant_manager/profile/"
@@ -337,22 +295,16 @@ class RestaurantManager(User):
 # من میخواهم فقط 
 # مدیران رستوران ها را برگرداند
     
-    
-    
-    
-    
+
     
 class CustomerManager(UserManager):
-    def create_restaurant_manager(self, email, password, **extra_fields):
+    def create_customer(self, email, password, **extra_fields):
         extra_fields.setdefault('is_customer', True)
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
 
         return super().create_user(email, password, **extra_fields)
     
-    def get_queryset(self):
-        return super().get_queryset().filter(is_customer = True,
-                         is_staff=False, is_superuser=False)
 
 
 # Customer.objects.all()
@@ -361,6 +313,7 @@ class CustomerManager(UserManager):
     
 # multi table
 class Customer(User):
+    objects = CustomerManager()
     address = models.ManyToManyField('Address', through='CustomerAddress', related_name='customeraddress')
 
     class Meta:
@@ -386,6 +339,10 @@ class CustomerAddress(models.Model):
     customer = models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True, related_name='customer2')
     address = models.ForeignKey('Address', on_delete=models.SET_NULL , null=True,related_name='address_related')
 
+    class Meta:
+        verbose_name = "آدرس مشتری"
+        verbose_name_plural = "آدرس مشتریان"
+        
     def __str__(self) -> str:
         return f"{self.customer}-address"
 
@@ -409,3 +366,24 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.state}, {self.city}, {self.street}"
+    
+    
+    
+class Profile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=250)
+    last_name = models.CharField(max_length=250)
+    image = models.ImageField(blank=True, null=True)
+    description = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.user.email
+    
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance.user)
+        

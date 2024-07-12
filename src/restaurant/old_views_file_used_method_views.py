@@ -1,12 +1,9 @@
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
 
-
-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db import connection
-from django.utils.decorators import method_decorator
 from django.views import View
 # class based views
 from django.views.generic import (
@@ -20,105 +17,79 @@ from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 
 from .models import Category, Restaurant
-from .forms import RestaurantModelForm
 
 
-from django.template.response import TemplateResponse
-
-
-
-
-from django.http import HttpResponse
-from django.utils.decorators import decorator_from_middleware
-from website.middlewares import custom_middleware
-custom_middleware = decorator_from_middleware(custom_middleware.CustomMiddleware)
-
-@custom_middleware
-def example_view(request, id, slug):
-    return HttpResponse(f'ID: {id}, Slug: {slug}')
-
-
-class Salam(View):
-    @custom_middleware
-    def get(self, request, id, slug):
-        return HttpResponse(f'ID: {id}, Slug: {slug}')
-    
-# @method_decorator(custom_middleware, name='dispatch')
-# class Salam(View):
-#     def get(self, request, id, slug):
-#         return HttpResponse(f'ID: {id}, Slug: {slug}')
 
 
 
 # @login_required
-def home_page_view(request):
-    # show all categoriesج
-    categories_list = Category.objects.all()
+# def home_page_view(request):
+#     # show all categoriesج
+#     categories_list = Category.objects.all()
     
-    # food-party
-    food_party_flag = False
-    food_party_items = []
+#     # food-party
+#     food_party_flag = False
+#     food_party_items = []
     
-    ### new restaurants
-    # aweek ago
-    one_week_ago = timezone.now() - timedelta(days=7)
-    # a week ago and up to 10 resturants
-    the_past_week_up_to_the_last_ten_restaurants = Restaurant.objects.filter(
-                                    created_at__gte=one_week_ago).order_by(
-                                    '-created_at').prefetch_related(
-                                    'categories'
-                                    )[:10]
+#     ### new restaurants
+#     # aweek ago
+#     one_week_ago = timezone.now() - timedelta(days=7)
+#     # a week ago and up to 10 resturants
+#     the_past_week_up_to_the_last_ten_restaurants = Restaurant.objects.filter(
+#                                     created_at__gte=one_week_ago).order_by(
+#                                     '-created_at').prefetch_related(
+#                                     'categories'
+#                                     )[:10]
     
   
-    recent_restrnts = the_past_week_up_to_the_last_ten_restaurants    
+#     recent_restrnts = the_past_week_up_to_the_last_ten_restaurants    
   
-    context = {
-        'cats' : categories_list,
+#     context = {
+#         'cats' : categories_list,
         
-        'food_party_flag' : food_party_flag,
-        'food_party_iitems' : food_party_items,
+#         'food_party_flag' : food_party_flag,
+#         'food_party_iitems' : food_party_items,
         
-        'recent_restaurants': recent_restrnts
-    }
+#         'recent_restaurants': recent_restrnts
+#     }
     
-    return TemplateResponse(request, 'restaurant/home_page.html', context)
-    # return render(request, 'restaurant/home_page.html', context)
+#     return render(request, 'restaurant/home_page.html', context)
 
 
 
 
-# class home_page(View):
-#     def get(self, request, *args, **kwargs):
-#         # show all categoriesج
-#         categories_list = Category.objects.all()
+class home_page(View):
+    def get(self, request, *args, **kwargs):
+        # show all categoriesج
+        categories_list = Category.objects.all()
         
-#         # food-party
-#         food_party_flag = False
-#         food_party_items = []
+        # food-party
+        food_party_flag = False
+        food_party_items = []
         
-#         ### new restaurants
-#         # aweek ago
-#         one_week_ago = timezone.now() - timedelta(days=7)
-#         # a week ago and up to 10 resturants
-#         the_past_week_up_to_the_last_ten_restaurants = Restaurant.objects.filter(
-#                                         created_at__gte=one_week_ago).order_by(
-#                                         '-created_at').prefetch_related(
-#                                         'categories'
-#                                         )[:10]
+        ### new restaurants
+        # aweek ago
+        one_week_ago = timezone.now() - timedelta(days=7)
+        # a week ago and up to 10 resturants
+        the_past_week_up_to_the_last_ten_restaurants = Restaurant.objects.filter(
+                                        created_at__gte=one_week_ago).order_by(
+                                        '-created_at').prefetch_related(
+                                        'categories'
+                                        )[:10]
         
     
-#         recent_restrnts = the_past_week_up_to_the_last_ten_restaurants    
+        recent_restrnts = the_past_week_up_to_the_last_ten_restaurants    
     
-#         context = {
-#             'cats' : categories_list,
+        context = {
+            'cats' : categories_list,
             
-#             'food_party_flag' : food_party_flag,
-#             'food_party_iitems' : food_party_items,
+            'food_party_flag' : food_party_flag,
+            'food_party_iitems' : food_party_items,
             
-#             'recent_restaurants': recent_restrnts
-#         }
+            'recent_restaurants': recent_restrnts
+        }
     
-#         return render(request, 'restaurant/home_page.html', context)
+    return render(request, 'restaurant/home_page.html', context)
 
 
 
@@ -180,21 +151,15 @@ class CategoryRestaurantListView(ListView):
 
     def get_queryset(self):
         category_slug = self.kwargs.get('slug')
-        if category_slug == 'all':
-            return Restaurant.objects.all()
-        elif category_slug:
+        if category_slug:
             self.category = get_object_or_404(Category, slug=category_slug)
             return Restaurant.objects.filter(categories=self.category)
         return Restaurant.objects.none()
 
     def get_context_data(self, **kwargs):
-        category_slug = self.kwargs.get('slug')
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
-        if category_slug == 'all':
-            context['msg_not_found'] = 'هیچ رستورانی وجود ندارد'
-        else:
-            context['msg_not_found'] = 'هیچ رستورانی دراین دسته بندی وجود ندارد'
+        context['msg_not_found'] = 'هیچ رستورانی دراین دسته بندی وجود ندارد'
         return context
 
 
@@ -254,21 +219,8 @@ class RestaurantSearchListView(ListView):
 
 
 
-class RestaurantDetailView(DetailView):
-    model = Restaurant
-    template_name = 'restaurant/restaurant_detail.html'
-    context_object_name = 'restaurant'
-    
-    
-class RestaurantUpdateView(UpdateView):
-    model = Restaurant
-    form_class = RestaurantModelForm
-    template_name = 'restaurant/restaurant_edit.html'
 
-    def form_valid(self, form):
-        form.instance.manager = self.request.user
-        return super().form_valid(form)
-    
+
 
 
 

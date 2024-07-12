@@ -6,9 +6,9 @@ from django.contrib.auth.admin import UserAdmin
 # from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import User
+from .models import User, Customer, RestaurantManager, CustomerAddress, Address
 
-# admin.site.register(User)
+
 
 class CustomUserCreationForm(UserCreationForm):
 
@@ -32,8 +32,8 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     
     model = User
-    list_display = ("email","is_superuser", "is_staff", "is_active",)
-    list_filter = ("email","is_superuser", "is_staff", "is_active",)
+    list_display = ("email","is_superuser", "is_staff", "is_active","is_customer")
+    list_filter = ("is_superuser", "is_staff", "is_active","is_customer")
     search_fields = ("email",)
     ordering = ("email",)
     
@@ -47,7 +47,7 @@ class CustomUserAdmin(UserAdmin):
          ),
         ("Permissions", {
             "fields": (
-                "is_superuser", "is_staff", "is_active", 
+                "is_superuser", "is_staff", "is_active", "is_customer",
                 "groups", "user_permissions"
                 )
             }
@@ -73,39 +73,6 @@ admin.site.register(User, CustomUserAdmin)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-from .models import User, Customer, RestaurantManager
-
 # class RestaurantManagerAdmin(admin.ModelAdmin):
 #     list_display = ('email', 'date_joined', 'is_active')
 #     search_fields = ('email',)
@@ -119,7 +86,7 @@ from .models import User, Customer, RestaurantManager
 
 
 class RestaurantManagerAdmin(admin.ModelAdmin):
-    list_display = ('email', 'date_joined', 'is_active')
+    list_display = ('email', 'date_joined', 'is_staff', 'is_active')
 
     def get_queryset(self, request):
         return RestaurantManager.objects.get_queryset()  # استفاده از منیجر سفارشی
@@ -129,12 +96,27 @@ admin.site.register(RestaurantManager, RestaurantManagerAdmin)
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('email', 'date_joined', 'is_active')
+    list_display = ('email', 'date_joined', 'is_staff', 'is_active')
+    
+    
+    def get_queryset(self, request):
+        return Customer.objects.all() 
     
     # def get_queryset(self, request):
+    #     print("=====222")
     #     qs = super().get_queryset(request)
+    #     print(len(qs))
     #     # if request.user.is_superuser:
     #     #     return qs  # اجازه دهید ادمین‌ها همه رکوردها را ببینند
     #     return qs.filter(is_customer=True)  # فقط نمایش مشتریان
 
 admin.site.register(Customer, CustomerAdmin)
+
+
+
+
+
+admin.site.register(CustomerAddress)
+admin.site.register(Address)
+
+
