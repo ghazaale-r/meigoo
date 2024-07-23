@@ -2,7 +2,7 @@
     <div class="container">
         {% comment %} {{request.user}}
         {{request.user.is_authenticated}} {% endcomment %}
-        <a href="{% url 'restaurants:home-page' %}" class="navbar-brand scroll-top">میگو</a>
+        <a href="{% url 'restaurants:home-page-cbv' %}" class="navbar-brand scroll-top">میگو</a>
         <nav class="navbar navbar-inverse" role="navigation">
             <div class="navbar-header">
                 <button type="button" id="nav-toggle" class="navbar-toggle" data-toggle="collapse" data-target="#main-nav">
@@ -15,7 +15,7 @@
             <!--/.navbar-header-->
             <div id="main-nav" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'restaurants:home-page' %}">خانه</a></li>
+                    <li><a href="{% url 'restaurants:home-page-cbv' %}">خانه</a></li>
                     <li><a href="{% url 'restaurants:category-slug-restaurants' 'all' %}">دسته بندی ها</a></li>
                     {% comment %} <li><a href="blog.html">Blog Entries</a></li> {% endcomment %}
                     <li><a href="{% url 'website:contact' %}">تماس با ما</a></li>

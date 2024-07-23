@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import RestaurantManager, Customer
+from .forms import CustomerSignUpForm, CustomUserSignUpForm
 
 
 def test(request):
@@ -168,10 +169,10 @@ def logout_view(request):
 from django.contrib.auth.models import User
 
 def signup_view(request):  
-    form = UserCreationForm()
+    form = CustomUserSignUpForm()
     
     if request.method == 'POST':
-        form = UserCreationForm(data=request.POST)
+        form = CustomUserSignUpForm(data=request.POST)
         if form.is_valid():
             form.save()
             # redirect to login page

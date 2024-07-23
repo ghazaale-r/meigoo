@@ -62,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_customer = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+    # profile = 
 
     # با حذف فیلد username
     # باید بهش بگیم شاخصی که برای ورود هست کدام فیلد هست
@@ -370,6 +371,10 @@ class Address(models.Model):
     
     
 class Profile(models.Model):
+    class Meta:
+        verbose_name = "پروفایل"
+        verbose_name_plural = "پروفایل ها"
+        
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
@@ -382,8 +387,35 @@ class Profile(models.Model):
         return self.user.email
     
 
-@receiver(post_save, sender=User)
+
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
+
+
+from django.contrib.auth import get_user_model
+
+Usermodel = get_user_model()
+
+# @receiver(post_save, sender=Usermodel)
+# def save_profile(sender, instance, **kwargs):
+#     print("this is post save signal method")
+#     instance.profile.save()
+
+
+
+
+@receiver(post_save, sender=Usermodel)
 def save_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance.user)
+        Profile.objects.create(user=instance)
+        
+@receiver(post_save, sender=Customer)
+def save_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+        
+@receiver(post_save, sender=RestaurantManager)
+def save_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
         

@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 # from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import User, Customer, RestaurantManager, CustomerAddress, Address
+from .models import User, Customer, RestaurantManager, CustomerAddress, Address, Profile
 
 
 
@@ -96,7 +96,7 @@ admin.site.register(RestaurantManager, RestaurantManagerAdmin)
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('email', 'date_joined', 'is_staff', 'is_active')
+    list_display = ('id', 'email', 'date_joined', 'is_staff', 'is_active')
     
     
     def get_queryset(self, request):
@@ -118,5 +118,6 @@ admin.site.register(Customer, CustomerAdmin)
 
 admin.site.register(CustomerAddress)
 admin.site.register(Address)
+admin.site.register(Profile)
 
 

@@ -44,19 +44,22 @@ def restaurant_manager_profile(request):
 
 # ==================================
 # CBV
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.views.generic import ListView, DetailView
 from .models import Customer, RestaurantManager
 from restaurant.models import Restaurant
 
 
 
-class CustomerProfileView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class CustomerProfileView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, DetailView):
+    permission_required = 'accounts.delete_address'
     model = Customer
     template_name = 'accounts/profile/customer_profile.html'
     context_object_name = 'user'
 
     def test_func(self):
+        # print('===========')
+        # print(self.request.user.has_perm('accounts.delete_address'))
         return self.request.user.id == self.kwargs['pk'] and self.request.user.is_is_customer()
     
     def get_object(self, queryset=None):
@@ -75,17 +78,22 @@ class CustomerProfileView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 #     def get_object(self, queryset=None):
 #         return RestaurantManager.objects.get(id=self.kwargs['pk'])
 
-
-
-class ManagerProfileView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
-    model = RestaurantManager
-    template_name = 'accounts/profile/manager_profile.html'
-    context_object_name = 'user'
-    paginate_by = 2
-
+class ProfileManagerPermissionMixin(UserPassesTestMixin):
+    
     def test_func(self):
         result = self.request.user.id == self.kwargs['pk'] and self.request.user.is_manager()
         return result
+    
+class ManagerProfileView(LoginRequiredMixin, ProfileManagerPermissionMixin, DetailView):
+    model = RestaurantManager
+    template_name = 'accounts/profile/manager_profile.html'
+    context_object_name = 'user'
+    # paginate_by = 2
+    
+    # profile/manag
+    
+
+    
     
     # def get_object(self, queryset=None):
     #     return RestaurantManager.objects.get(id=self.kwargs['pk'])

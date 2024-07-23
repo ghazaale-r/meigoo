@@ -65,7 +65,6 @@ class Category(models.Model):
     
     
     def save(self, *args, **kwargs):
-        print('================================')
         if not self.slug:
             self.slug = slugify(self.name, allow_unicode=True)
         super().save(*args, **kwargs)

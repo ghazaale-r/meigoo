@@ -38,10 +38,10 @@ def example_view(request, id, slug):
     return HttpResponse(f'ID: {id}, Slug: {slug}')
 
 
-class Salam(View):
-    @custom_middleware
-    def get(self, request, id, slug):
-        return HttpResponse(f'ID: {id}, Slug: {slug}')
+# class Salam(View):
+#     @custom_middleware
+#     def get(self, request, id, slug):
+#         return HttpResponse(f'ID: {id}, Slug: {slug}')
     
 # @method_decorator(custom_middleware, name='dispatch')
 # class Salam(View):
@@ -87,38 +87,38 @@ def home_page_view(request):
 
 
 
-# class home_page(View):
-#     def get(self, request, *args, **kwargs):
-#         # show all categoriesج
-#         categories_list = Category.objects.all()
+class HomePage(View):
+    def get(self, request, *args, **kwargs):
+        # show all categoriesج
+        categories_list = Category.objects.all()
         
-#         # food-party
-#         food_party_flag = False
-#         food_party_items = []
+        # food-party
+        food_party_flag = False
+        food_party_items = []
         
-#         ### new restaurants
-#         # aweek ago
-#         one_week_ago = timezone.now() - timedelta(days=7)
-#         # a week ago and up to 10 resturants
-#         the_past_week_up_to_the_last_ten_restaurants = Restaurant.objects.filter(
-#                                         created_at__gte=one_week_ago).order_by(
-#                                         '-created_at').prefetch_related(
-#                                         'categories'
-#                                         )[:10]
+        ### new restaurants
+        # aweek ago
+        one_week_ago = timezone.now() - timedelta(days=7)
+        # a week ago and up to 10 resturants
+        the_past_week_up_to_the_last_ten_restaurants = Restaurant.objects.filter(
+                                        created_at__gte=one_week_ago).order_by(
+                                        '-created_at').prefetch_related(
+                                        'categories'
+                                        )[:10]
         
     
-#         recent_restrnts = the_past_week_up_to_the_last_ten_restaurants    
+        recent_restrnts = the_past_week_up_to_the_last_ten_restaurants    
     
-#         context = {
-#             'cats' : categories_list,
+        context = {
+            'cats' : categories_list,
             
-#             'food_party_flag' : food_party_flag,
-#             'food_party_iitems' : food_party_items,
+            'food_party_flag' : food_party_flag,
+            'food_party_iitems' : food_party_items,
             
-#             'recent_restaurants': recent_restrnts
-#         }
+            'recent_restaurants': recent_restrnts
+        }
     
-#         return render(request, 'restaurant/home_page.html', context)
+        return render(request, 'restaurant/home_page.html', context)
 
 
 
@@ -252,15 +252,23 @@ class RestaurantSearchListView(ListView):
         return context
 
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 
 
-class RestaurantDetailView(DetailView):
+class RestaurantDetailView(LoginRequiredMixin, UserPassesTestMixin,  DetailView):
+# class RestaurantDetailView(LoginRequiredMixin, DetailView):
+    # permission_required = 'restaurant.view_restaurant'
     model = Restaurant
     template_name = 'restaurant/restaurant_detail.html'
     context_object_name = 'restaurant'
     
+    def test_func(self):
+        # rest_obj = Restaurant.objects.filter(user=self.request.user)
+        self.object = self.get_object()
+        return self.request.user == self.object.manager
     
-class RestaurantUpdateView(UpdateView):
+class RestaurantUpdateView(LoginRequiredMixin, UpdateView):
     model = Restaurant
     form_class = RestaurantModelForm
     template_name = 'restaurant/restaurant_edit.html'

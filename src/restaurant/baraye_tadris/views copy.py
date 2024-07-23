@@ -34,7 +34,6 @@ def print_all_categories():
         for cat_restaurant in cat.restaurants.all():
             print(cat_restaurant.name) # اسم رستوران
             
-        print("================================================")
 
 def print_all_restrnts():
     # همانند توضیحات بالا خط ۱۳ تا ۱۸

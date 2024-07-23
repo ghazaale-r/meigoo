@@ -2,25 +2,40 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import (Customer, 
+from .models import (Customer, User,
                      RestaurantManager)
 
 from restaurant.models import ( 
                      Restaurant, Address )
 
 
+class CustomUserSignUpForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['email', 'password1', 'password2']
+        
+        
+        
+        
 class CustomerSignUpForm(UserCreationForm):
     class Meta:
         model = Customer
         fields = ['email', 'password1', 'password2']
 
 
+
+
+
+
+
 class ManagerSignUpForm(UserCreationForm):
     restaurant_name = forms.CharField(max_length=255)
+    
     street = forms.CharField(max_length=100)
     city = forms.CharField(max_length=100)
     state = forms.CharField(max_length=50)
     zipcode = forms.CharField(max_length=10, required=False)
+    
     categories = forms.MultipleChoiceField(choices=[]) 
     
     def __init__(self, *args, **kwargs):
