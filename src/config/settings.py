@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     
     # third-party apps
     # 'debug_toolbar',
+    'rest_framework',
     
     # custom apps
     'restaurant',
@@ -162,3 +163,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # custom user model config
 AUTH_USER_MODEL = 'accounts.User'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
+}
