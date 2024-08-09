@@ -7,20 +7,22 @@ from .views import *
 
 
 
-app_name = 'restaurants-api'
+app_name = 'api-v1'
 
 
 
 
 router = DefaultRouter()
-router.register(r'address', AddressViewSet, basename='addr')
+router.register(r'address', AddressModelViewSet, basename='addr')
+router.register(r'category', CategoryModelViewSet, basename='cat')
+router.register(r'rest', RestaurantModelViewSet, basename='rest')
 # router.register(r'restaurant', RestaurantViewSet, basename='rest')
 urlpatterns = router.urls
 
 
 urlpatterns += [
-    path('restaurant/list/',  restaurant_list, name='restaurant_list'),
-    path('restaurant/<int:id>/',  restaurant_detail, name='restaurant-detail'),
+    # path('restaurant/list/',  restaurant_list, name='restaurant_list'),
+    # path('restaurant/<int:id>/',  restaurant_detail, name='restaurant-detail'),
     
     # path('', include('router.urls'))
     # path('address/list/',  address_list, name='address_list'),
