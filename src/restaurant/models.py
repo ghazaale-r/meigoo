@@ -1,5 +1,6 @@
 from datetime import datetime
 from unidecode import unidecode 
+from django.urls import reverse
 
 # from django.contrib.auth.models import User
 from django.core.validators import ( MinLengthValidator, MaxLengthValidator,
@@ -107,7 +108,16 @@ class Restaurant(models.Model):
                                         ])
     # main_branch = models.BooleanField(default=False, null=False)
 
-
+    def get_manager_username(self):
+        return f'{self.manager.email}'
+    
+    def get_absolute_url(self):
+        return reverse("model_detail", kwargs={"pk": self.pk})
+    
+    def get_absolute_api_url(self):
+        return reverse("restaurants:api-v1:rest-detail", kwargs={"pk": self.pk})
+    
+    
     def save(self, *args, **kwargs):
         # فیلد اسلاگ باید یونیک باشد پس چون اسلاگ از روی نام رستوران هست و ما فیلد نام را یونیک نکرده ایم
         # برخلاف فیلد نام کتگوری که یونیک کرده ایم 
